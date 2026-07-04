@@ -30,6 +30,10 @@ app.use('/api/chat', chatRoutes);
 const riwayatRoutes = require('./src/routes/riwayatRoutes');
 app.use('/api/riwayat', riwayatRoutes);
 
+// Pasang rute pencarian makanan → semua alamatnya diawali /api/makanan
+const makananRoutes = require('./src/routes/makananRoutes');
+app.use('/api/makanan', makananRoutes);
+
 // Pasang rute artikel → semua alamatnya diawali /api/artikel
 const artikelRoutes = require('./src/routes/artikelRoutes');
 app.use('/api/artikel', artikelRoutes);
