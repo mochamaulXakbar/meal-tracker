@@ -14,6 +14,10 @@ const PORT = process.env.PORT || 3000;
 const authRoutes = require('./src/routes/authRoutes');
 app.use('/api/auth', authRoutes);
 
+// Pasang rute pengguna → semua alamatnya diawali /api/pengguna
+const penggunaRoutes = require('./src/routes/penggunaRoutes');
+app.use('/api/pengguna', penggunaRoutes);
+
 // Endpoint tes server hidup
 app.get('/', (req, res) => {
   res.json({ status: 'success', message: 'Server Meal Tracker jalan!', tim: 'DB13-G003' });
