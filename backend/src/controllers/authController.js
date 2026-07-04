@@ -2,6 +2,42 @@
 
 const supabase = require('../config/supabase');
 
+// Fungsi: Login user
+const login = async (req, res) => {
+  const { email, password } = req.body;
+
+  // Validasi field wajib
+  if (!email || !password) {
+    return res.status(400).json({
+      status: 'error',
+      pesan: 'Email dan password wajib diisi'
+    });
+  }
+
+  // Minta Supabase cek email+password, kalau bener dia balikin token
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email, password
+  });
+
+  if (error) {
+    return res.status(401).json({ status: 'error', pesan: 'Email atau password salah' });
+  }
+
+  // Ambil juga profil dari tabel pengguna (biar frontend langsung dapet data user)
+  const { data: profil } = await supabase
+    .from('pengguna')
+    .select('*')
+    .eq('id', data.user.id)
+    .single();
+
+  res.json({
+    status: 'success',
+    pesan: 'Login berhasil',
+    token: data.session.access_token,   // ← ini "gelang"-nya
+    data: profil
+  });
+};
+
 // Fungsi: Register user baru
 const register = async (req, res) => {
   const { email, password, nama_pengguna, nama_lengkap } = req.body;
@@ -43,4 +79,4 @@ const register = async (req, res) => {
   res.status(201).json({ status: 'success', pesan: 'Registrasi berhasil', data: profil });
 };
 
-module.exports = { register };
+module.exports = { register, login };

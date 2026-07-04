@@ -4,7 +4,7 @@ const supabase = require('../config/supabase');
 
 // Fungsi: Lengkapi / update profil pengguna
 const lengkapiProfil = async (req, res) => {
-  const { id } = req.params;   // ← SEMENTARA: id dari URL. Nanti diganti dari token.
+ const id = req.userId;
   const {
     nama_lengkap, tanggal_lahir, jenis_kelamin,
     tinggi_cm, berat_kg, tingkat_aktivitas
