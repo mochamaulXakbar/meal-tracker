@@ -18,9 +18,13 @@ app.use('/api/auth', authRoutes);
 const penggunaRoutes = require('./src/routes/penggunaRoutes');
 app.use('/api/pengguna', penggunaRoutes);
 
-//Gemini
+// Pasang rute AI Meal Planner → semua alamatnya diawali /api/meal-plan
 const mealPlanRoutes = require('./src/routes/mealPlanRoutes');
 app.use('/api/meal-plan', mealPlanRoutes);
+
+// Pasang rute chatbot Diet Buddy → semua alamatnya diawali /api/chat
+const chatRoutes = require('./src/routes/chatRoutes');
+app.use('/api/chat', chatRoutes);
 
 // Endpoint tes server hidup
 app.get('/', (req, res) => {
