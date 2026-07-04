@@ -1,6 +1,7 @@
 // src/controllers/authController.js — logika (otak) fitur autentikasi
 
 const supabase = require('../config/supabase');
+const { createClient } = require('@supabase/supabase-js');
 
 // Fungsi: Login user
 const login = async (req, res) => {
@@ -14,8 +15,11 @@ const login = async (req, res) => {
     });
   }
 
-  // Minta Supabase cek email+password, kalau bener dia balikin token
-  const { data, error } = await supabase.auth.signInWithPassword({
+  // Client sekali-pakai khusus login (biar sesi user nggak nulari client utama)
+  const supabaseAuth = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY, {
+    auth: { persistSession: false, autoRefreshToken: false }
+  });
+  const { data, error } = await supabaseAuth.auth.signInWithPassword({
     email, password
   });
 

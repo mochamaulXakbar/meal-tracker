@@ -30,6 +30,10 @@ app.use('/api/chat', chatRoutes);
 const riwayatRoutes = require('./src/routes/riwayatRoutes');
 app.use('/api/riwayat', riwayatRoutes);
 
+// Pasang rute artikel → semua alamatnya diawali /api/artikel
+const artikelRoutes = require('./src/routes/artikelRoutes');
+app.use('/api/artikel', artikelRoutes);
+
 // Endpoint tes server hidup
 app.get('/', (req, res) => {
   res.json({ status: 'success', message: 'Server Meal Tracker jalan!', tim: 'DB13-G003' });

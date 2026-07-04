@@ -25,4 +25,23 @@ const cekLogin = async (req, res, next) => {
   next();   // ← lolos! lanjut ke endpoint tujuan
 };
 
-module.exports = { cekLogin };
+// cek apakah user PERANnya admin
+const cekAdmin = async (req, res, next) => {
+  const { data: profil, error } = await supabase
+    .from('pengguna')
+    .select('peran')
+    .eq('id', req.userId)   // req.userId udah diisi cekLogin sebelumnya
+    .single();
+
+  if (error || !profil) {
+    return res.status(404).json({ status: 'error', pesan: 'Pengguna tidak ditemukan' });
+  }
+
+  if (profil.peran !== 'admin') {
+    return res.status(403).json({ status: 'error', pesan: 'Akses ditolak. Khusus admin.' });
+  }
+
+  next();   // lolos, dia admin
+};
+
+module.exports = { cekLogin, cekAdmin };
