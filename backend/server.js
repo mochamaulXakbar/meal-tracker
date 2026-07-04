@@ -18,6 +18,10 @@ app.use('/api/auth', authRoutes);
 const penggunaRoutes = require('./src/routes/penggunaRoutes');
 app.use('/api/pengguna', penggunaRoutes);
 
+//Gemini
+const mealPlanRoutes = require('./src/routes/mealPlanRoutes');
+app.use('/api/meal-plan', mealPlanRoutes);
+
 // Endpoint tes server hidup
 app.get('/', (req, res) => {
   res.json({ status: 'success', message: 'Server Meal Tracker jalan!', tim: 'DB13-G003' });
