@@ -26,6 +26,10 @@ app.use('/api/meal-plan', mealPlanRoutes);
 const chatRoutes = require('./src/routes/chatRoutes');
 app.use('/api/chat', chatRoutes);
 
+// Pasang rute riwayat makanan → semua alamatnya diawali /api/riwayat
+const riwayatRoutes = require('./src/routes/riwayatRoutes');
+app.use('/api/riwayat', riwayatRoutes);
+
 // Endpoint tes server hidup
 app.get('/', (req, res) => {
   res.json({ status: 'success', message: 'Server Meal Tracker jalan!', tim: 'DB13-G003' });
