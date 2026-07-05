@@ -64,9 +64,11 @@ const register = async (req, res) => {
   }
 
   // Simpen profil ke tabel pengguna (id sama = "jahitan")
+  // Pakai upsert, bukan insert — soalnya trigger on_auth_user_created di Supabase
+  // udah otomatis bikin baris kosong pas createUser() di atas, jadi ini nyusul isi datanya
   const { data: profil, error: profilError } = await supabase
     .from('pengguna')
-    .insert({
+    .upsert({
       id: authData.user.id,
       email,
       nama_pengguna,
