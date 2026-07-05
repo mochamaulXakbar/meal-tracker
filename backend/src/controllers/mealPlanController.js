@@ -2,6 +2,11 @@
 
 const supabase = require('../config/supabase');
 const model = require('../config/gemini');
+const { ambilCache, simpanCache } = require('../utils/cache');
+
+// Cache singkat (5 menit) — jaga-jaga kalau user klik generate berkali-kali
+// dalam waktu dekat, nggak perlu panggil Gemini ulang & boros kuota
+const TTL_CACHE_DETIK = 5 * 60;
 
 const generateMenu = async (req, res) => {
   const id = req.userId;   // dari token
@@ -24,6 +29,12 @@ const generateMenu = async (req, res) => {
   const faktor = { sedentary:1.2, light:1.375, moderate:1.55, active:1.725, very_active:1.9 }[tingkat_aktivitas] || 1.2;
   let bmr = 10*berat_kg + 6.25*tinggi_cm - 5*umur + (jenis_kelamin === 'pria' ? 5 : -161);
   const tdee = Math.round(bmr * faktor);
+
+  const kunciCache = `mealplan:${id}:${tdee}`;
+  const hasilCache = ambilCache(kunciCache);
+  if (hasilCache) {
+    return res.json({ ...hasilCache, dari_cache: true });
+  }
 
   // 2. Bikin perintah (prompt) buat Gemini — minta jawaban JSON aja
   const prompt = `
@@ -51,10 +62,40 @@ Jawab HANYA dalam format JSON valid (tanpa teks lain, tanpa markdown), struktur 
     // 5. Ubah teks JSON jadi objek
     const menu = JSON.parse(teks);
 
-    res.json({ status: 'success', pesan: 'Menu berhasil dibuat', data: menu });
+    // 6. Simpen ke riwayat rencana_menu (biar user bisa liat rekomendasi sebelumnya)
+    const totalKalori =
+      (menu.menu?.sarapan?.kalori || 0) +
+      (menu.menu?.makan_siang?.kalori || 0) +
+      (menu.menu?.makan_malam?.kalori || 0);
+
+    await supabase.from('rencana_menu').insert({
+      id_pengguna: id,
+      target_kalori: tdee,
+      total_kalori: totalKalori,
+      menu: menu.menu
+    });
+
+    const responBody = { status: 'success', pesan: 'Menu berhasil dibuat', data: menu };
+    simpanCache(kunciCache, responBody, TTL_CACHE_DETIK);
+    res.json(responBody);
   } catch (err) {
     return res.status(500).json({ status: 'error', pesan: 'Gagal membuat menu', detail: err.message });
   }
 };
 
-module.exports = { generateMenu };
+// GET /api/meal-plan/riwayat — ambil riwayat menu yang pernah di-generate
+const ambilRiwayatMenu = async (req, res) => {
+  const id = req.userId;
+
+  const { data, error } = await supabase
+    .from('rencana_menu')
+    .select('*')
+    .eq('id_pengguna', id)
+    .order('dibuat_pada', { ascending: false })
+    .limit(30);
+
+  if (error) return res.status(500).json({ status: 'error', pesan: error.message });
+  res.json({ status: 'success', jumlah: data.length, data });
+};
+
+module.exports = { generateMenu, ambilRiwayatMenu };

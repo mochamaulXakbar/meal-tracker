@@ -29,6 +29,23 @@ const kategoriBMI = (bmi) => {
   return 'Obesitas';
 };
 
+// Fungsi: Ambil profil pengguna yang login (buat load ulang dasbor tanpa login lagi)
+const ambilProfil = async (req, res) => {
+  const id = req.userId;
+
+  const { data, error } = await supabase
+    .from('pengguna')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (error || !data) {
+    return res.status(404).json({ status: 'error', pesan: 'Profil tidak ditemukan' });
+  }
+
+  res.json({ status: 'success', data });
+};
+
 // Fungsi: Lengkapi / update profil pengguna
 const lengkapiProfil = async (req, res) => {
  const id = req.userId;
@@ -117,4 +134,4 @@ const hitungKalkulasi = async (req, res) => {
     }
   });
 };
-module.exports = { lengkapiProfil, hitungKalkulasi };
+module.exports = { ambilProfil, lengkapiProfil, hitungKalkulasi };

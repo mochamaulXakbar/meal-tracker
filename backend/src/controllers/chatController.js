@@ -3,6 +3,10 @@
 const supabase = require('../config/supabase');
 const model = require('../config/gemini');
 
+// Batas pesan lama yang dibawa sebagai konteks ke Gemini — biar nggak
+// makin lambat/kena limit token kalau riwayat chat user udah panjang
+const BATAS_RIWAYAT_KONTEKS = 20;
+
 // POST /api/chat — kirim pesan, dapet balasan (inget riwayat)
 const kirimPesan = async (req, res) => {
   const id_pengguna = req.userId;   // dari token
@@ -18,12 +22,16 @@ const kirimPesan = async (req, res) => {
       id_pengguna, pengirim: 'pengguna', isi_pesan: pesan
     });
 
-    // Ambil SEMUA riwayat chat user (buat konteks), urut dari lama ke baru
-    const { data: riwayat } = await supabase
+    // Ambil riwayat chat user (buat konteks) — dibatasi N pesan terakhir aja,
+    // ambil dari yg terbaru dulu (limit), baru dibalik jadi urut lama ke baru
+    const { data: riwayatTerbalik } = await supabase
       .from('pesan_chat')
       .select('pengirim, isi_pesan')
       .eq('id_pengguna', id_pengguna)
-      .order('dibuat_pada', { ascending: true });
+      .order('dibuat_pada', { ascending: false })
+      .limit(BATAS_RIWAYAT_KONTEKS);
+
+    const riwayat = (riwayatTerbalik || []).reverse();
 
     // Susun riwayat jadi format yang dimengerti Gemini
     //    Gemini pakai peran 'user' & 'model' → kita terjemahin dari pengguna/ai

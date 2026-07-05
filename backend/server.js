@@ -47,6 +47,17 @@ app.get('/', (req, res) => {
   res.json({ status: 'success', message: 'Server Meal Tracker jalan!', tim: 'DB13-G003' });
 });
 
+// Alamat nggak ketemu → 404 JSON, bukan HTML default Express
+app.use((req, res) => {
+  res.status(404).json({ status: 'error', pesan: `Alamat ${req.method} ${req.originalUrl} tidak ditemukan` });
+});
+
+// Penjaga terakhir — nangkep error yang nggak ke-handle di controller
+app.use((err, req, res, next) => {
+  console.error('Error tidak tertangani:', err);
+  res.status(500).json({ status: 'error', pesan: 'Terjadi kesalahan pada server' });
+});
+
 app.listen(PORT, () => {
   console.log(`Server jalan di http://localhost:${PORT}`);
 });
