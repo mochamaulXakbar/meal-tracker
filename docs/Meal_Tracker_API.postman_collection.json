@@ -1,0 +1,527 @@
+{
+  "info": {
+    "name": "Meal Tracker API (DB13-G003)",
+    "description": "Kontrak API lengkap untuk Meal Tracker and Planner. Lihat docs/API.md untuk detail format. Jalankan request 'Login' dulu — token otomatis kesimpan ke variable {{token}} dan dipakai semua request lain yang butuh login.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      { "key": "token", "value": "{{token}}", "type": "string" }
+    ]
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:3000/api", "type": "string" },
+    { "key": "token", "value": "", "type": "string" },
+    { "key": "admin_email", "value": "", "type": "string" },
+    { "key": "admin_password", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "auth": { "type": "noauth" },
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"akbar@mail.test\",\n  \"password\": \"rahasia123\",\n  \"nama_pengguna\": \"akbar\",\n  \"nama_lengkap\": \"Akbar Maulana\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            },
+            "description": "Daftar akun baru. peran otomatis 'pengguna'."
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const data = pm.response.json();",
+                  "if (data.token) {",
+                  "    pm.collectionVariables.set('token', data.token);",
+                  "    console.log('Token tersimpan ke variable {{token}}');",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "auth": { "type": "noauth" },
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"akbar@mail.test\",\n  \"password\": \"rahasia123\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Login. Token dari response otomatis disimpan ke {{token}} lewat test script, jadi request lain di collection ini langsung bisa jalan tanpa copy-paste manual."
+          },
+          "response": []
+        },
+        {
+          "name": "Login (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const data = pm.response.json();",
+                  "if (data.token) {",
+                  "    pm.collectionVariables.set('token', data.token);",
+                  "    console.log('Token admin tersimpan ke variable {{token}}');",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "auth": { "type": "noauth" },
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{admin_email}}\",\n  \"password\": \"{{admin_password}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Login sebagai akun yang peran-nya sudah di-set 'admin' langsung di tabel pengguna (Supabase). Pakai endpoint yang SAMA dengan Login biasa — Supabase Auth tidak punya login khusus admin, yang membedakan cuma kolom peran. Isi variable admin_email & admin_password lewat Postman Environment lokal (Meal_Tracker_Local.postman_environment.json), JANGAN diisi langsung di sini supaya nggak ikut ke-commit ke git."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Pengguna & Profil",
+      "item": [
+        {
+          "name": "Ambil Profil",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/pengguna/profil",
+              "host": ["{{base_url}}"],
+              "path": ["pengguna", "profil"]
+            },
+            "description": "Ambil data profil pengguna yang sedang login."
+          },
+          "response": []
+        },
+        {
+          "name": "Lengkapi / Update Profil",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama_lengkap\": \"Akbar Maulana\",\n  \"tanggal_lahir\": \"2000-01-01\",\n  \"jenis_kelamin\": \"pria\",\n  \"tinggi_cm\": 170,\n  \"berat_kg\": 65,\n  \"tingkat_aktivitas\": \"moderate\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/pengguna/profil",
+              "host": ["{{base_url}}"],
+              "path": ["pengguna", "profil"]
+            },
+            "description": "Semua field opsional — kirim yang mau diubah saja. tingkat_aktivitas: sedentary | light | moderate | active | very_active."
+          },
+          "response": []
+        },
+        {
+          "name": "Kalkulasi BMI & TDEE",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/pengguna/kalkulasi",
+              "host": ["{{base_url}}"],
+              "path": ["pengguna", "kalkulasi"]
+            },
+            "description": "Profil harus lengkap dulu (berat, tinggi, tanggal_lahir, jenis_kelamin, tingkat_aktivitas), kalau belum akan balas error 400."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Pencarian Makanan",
+      "item": [
+        {
+          "name": "Cari Makanan (Edamam)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/makanan/cari?q=nasi goreng",
+              "host": ["{{base_url}}"],
+              "path": ["makanan", "cari"],
+              "query": [
+                { "key": "q", "value": "nasi goreng" }
+              ]
+            },
+            "description": "Hasil di-cache di server 1 jam per kata kunci (field dari_cache: true kalau dari cache)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Riwayat Makanan",
+      "item": [
+        {
+          "name": "Tambah Riwayat Makanan",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama_makanan\": \"Nasi Goreng\",\n  \"kalori\": 190,\n  \"protein_g\": 4.2,\n  \"karbohidrat_g\": 25.1,\n  \"lemak_g\": 7.8,\n  \"jenis_makan\": \"sarapan\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/riwayat",
+              "host": ["{{base_url}}"],
+              "path": ["riwayat"]
+            },
+            "description": "tanggal_konsumsi opsional, default hari ini. jenis_makan: sarapan | siang | malam | camilan."
+          },
+          "response": []
+        },
+        {
+          "name": "Lihat Riwayat Makanan",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/riwayat?tanggal=2026-07-06",
+              "host": ["{{base_url}}"],
+              "path": ["riwayat"],
+              "query": [
+                { "key": "tanggal", "value": "2026-07-06", "disabled": true }
+              ]
+            },
+            "description": "Query tanggal opsional (di-disable secara default, aktifkan kalau mau filter tanggal tertentu)."
+          },
+          "response": []
+        },
+        {
+          "name": "Edit Riwayat Makanan",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"kalori\": 200\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/riwayat/:id",
+              "host": ["{{base_url}}"],
+              "path": ["riwayat", ":id"],
+              "variable": [{ "key": "id", "value": "" }]
+            },
+            "description": "Ganti value variable 'id' di tab Params/URL dengan id riwayat yang mau diedit."
+          },
+          "response": []
+        },
+        {
+          "name": "Hapus Riwayat Makanan",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/riwayat/:id",
+              "host": ["{{base_url}}"],
+              "path": ["riwayat", ":id"],
+              "variable": [{ "key": "id", "value": "" }]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Riwayat Berat Badan",
+      "item": [
+        {
+          "name": "Tambah Berat",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"berat_kg\": 64.5\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/berat",
+              "host": ["{{base_url}}"],
+              "path": ["berat"]
+            },
+            "description": "tanggal opsional, default hari ini. Otomatis update berat_kg di profil juga."
+          },
+          "response": []
+        },
+        {
+          "name": "Grafik Berat",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/berat/grafik",
+              "host": ["{{base_url}}"],
+              "path": ["berat", "grafik"]
+            },
+            "description": "1 titik per hari, urut lama ke baru — buat chart."
+          },
+          "response": []
+        },
+        {
+          "name": "Semua Riwayat Berat",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/berat",
+              "host": ["{{base_url}}"],
+              "path": ["berat"]
+            },
+            "description": "Data mentah semua entri, urut baru ke lama."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "AI Meal Planner",
+      "item": [
+        {
+          "name": "Generate Menu",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/meal-plan/generate",
+              "host": ["{{base_url}}"],
+              "path": ["meal-plan", "generate"]
+            },
+            "description": "Tidak perlu body — TDEE dihitung otomatis dari profil. Hasil di-cache 5 menit per user, dan otomatis disimpan sebagai riwayat ke tabel rencana_menu."
+          },
+          "response": []
+        },
+        {
+          "name": "Riwayat Menu",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/meal-plan/riwayat",
+              "host": ["{{base_url}}"],
+              "path": ["meal-plan", "riwayat"]
+            },
+            "description": "30 riwayat menu terakhir yang pernah di-generate, urut baru ke lama."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "AI Diet Buddy (Chat)",
+      "item": [
+        {
+          "name": "Kirim Pesan",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pesan\": \"Apa itu defisit kalori?\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/chat",
+              "host": ["{{base_url}}"],
+              "path": ["chat"]
+            },
+            "description": "Konteks yang dikirim ke Gemini dibatasi 20 pesan terakhir."
+          },
+          "response": []
+        },
+        {
+          "name": "Ambil Riwayat Chat",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/chat",
+              "host": ["{{base_url}}"],
+              "path": ["chat"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Hapus 1 Pesan",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/chat/:id",
+              "host": ["{{base_url}}"],
+              "path": ["chat", ":id"],
+              "variable": [{ "key": "id", "value": "" }]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Hapus Semua Chat",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/chat",
+              "host": ["{{base_url}}"],
+              "path": ["chat"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Artikel Edukasi",
+      "item": [
+        {
+          "name": "Lihat Semua Artikel",
+          "request": {
+            "method": "GET",
+            "auth": { "type": "noauth" },
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/artikel?kategori=resep",
+              "host": ["{{base_url}}"],
+              "path": ["artikel"],
+              "query": [
+                { "key": "kategori", "value": "resep", "disabled": true }
+              ]
+            },
+            "description": "Publik, tanpa login. Query kategori opsional (di-disable secara default)."
+          },
+          "response": []
+        },
+        {
+          "name": "Lihat Satu Artikel",
+          "request": {
+            "method": "GET",
+            "auth": { "type": "noauth" },
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/artikel/:id",
+              "host": ["{{base_url}}"],
+              "path": ["artikel", ":id"],
+              "variable": [{ "key": "id", "value": "" }]
+            },
+            "description": "Publik, tanpa login."
+          },
+          "response": []
+        },
+        {
+          "name": "Tambah Artikel (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"judul\": \"5 Tips Defisit Kalori\",\n  \"kategori\": \"edukasi\",\n  \"konten\": \"Isi artikel di sini...\",\n  \"url_sumber\": \"\",\n  \"url_gambar\": \"\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/artikel",
+              "host": ["{{base_url}}"],
+              "path": ["artikel"]
+            },
+            "description": "Butuh login DAN peran akun = admin, kalau tidak akan kena 403."
+          },
+          "response": []
+        },
+        {
+          "name": "Edit Artikel (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"judul\": \"Judul Baru\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/artikel/:id",
+              "host": ["{{base_url}}"],
+              "path": ["artikel", ":id"],
+              "variable": [{ "key": "id", "value": "" }]
+            },
+            "description": "Admin only. Field opsional, kirim yang mau diubah saja."
+          },
+          "response": []
+        },
+        {
+          "name": "Hapus Artikel (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/artikel/:id",
+              "host": ["{{base_url}}"],
+              "path": ["artikel", ":id"],
+              "variable": [{ "key": "id", "value": "" }]
+            },
+            "description": "Admin only."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
