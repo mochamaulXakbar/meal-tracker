@@ -112,7 +112,7 @@ Semua data mentah (log detail), urut baru → lama.
 ## AI Meal Planner — `/api/meal-plan` (butuh login)
 
 ### POST /meal-plan/generate
-Tidak perlu body — TDEE dihitung otomatis dari profil (profil harus lengkap).
+Body opsional: `{ "pantangan": "alergi kacang, tidak suka ikan" }` — kalau diisi, AI akan menghindari bahan tersebut. Boleh dikosongkan/dihilangkan. TDEE dihitung otomatis dari profil (profil harus lengkap).
 Response:
 ```json
 {

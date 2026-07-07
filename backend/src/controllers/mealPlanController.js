@@ -10,6 +10,7 @@ const TTL_CACHE_DETIK = 5 * 60;
 
 const generateMenu = async (req, res) => {
   const id = req.userId;   // dari token
+  const pantangan = (req.body?.pantangan || '').trim().slice(0, 200); // opsional, alergi/pantangan makanan
 
   // 1. Ambil profil + hitung TDEE (biar menu pas sama kebutuhan kalori)
   const { data: profil, error } = await supabase
@@ -30,17 +31,22 @@ const generateMenu = async (req, res) => {
   let bmr = 10*berat_kg + 6.25*tinggi_cm - 5*umur + (jenis_kelamin === 'pria' ? 5 : -161);
   const tdee = Math.round(bmr * faktor);
 
-  const kunciCache = `mealplan:${id}:${tdee}`;
+  // Pantangan ikut jadi bagian kunci cache — beda pantangan = jangan pakai cache yang lama
+  const kunciCache = `mealplan:${id}:${tdee}:${pantangan.toLowerCase()}`;
   const hasilCache = ambilCache(kunciCache);
   if (hasilCache) {
     return res.json({ ...hasilCache, dari_cache: true });
   }
 
   // 2. Bikin perintah (prompt) buat Gemini — minta jawaban JSON aja
+  const baginPantangan = pantangan
+    ? `\nPENTING - user punya alergi/pantangan berikut, WAJIB dihindari sepenuhnya: ${pantangan}.`
+    : '';
+
   const prompt = `
 Kamu ahli gizi. Buatkan rekomendasi menu makan untuk SATU HARI (sarapan, makan siang, makan malam)
 untuk orang Indonesia dengan total kalori sekitar ${tdee} kkal.
-Gunakan makanan Indonesia yang umum & terjangkau.
+Gunakan makanan Indonesia yang umum & terjangkau.${baginPantangan}
 Jawab HANYA dalam format JSON valid (tanpa teks lain, tanpa markdown), struktur persis seperti ini:
 {
   "total_target_kalori": ${tdee},
