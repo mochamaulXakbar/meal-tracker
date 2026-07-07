@@ -174,6 +174,41 @@ Body: `{ "judul": "...", "kategori": "...", "konten": "...", "url_sumber": "..."
 
 ---
 
+## Admin — `/api/admin` (butuh login + peran `admin`)
+
+### GET /admin/pengguna
+Daftar semua pengguna terdaftar, urut baru → lama.
+Response:
+```json
+{
+  "status": "success",
+  "jumlah": 42,
+  "data": [
+    { "id": "...", "nama_pengguna": "...", "nama_lengkap": "...", "email": "...", "peran": "pengguna", "dibuat_pada": "..." }
+  ]
+}
+```
+
+### GET /admin/statistik
+Statistik pertumbuhan pengguna.
+Response:
+```json
+{
+  "status": "success",
+  "data": {
+    "total_pengguna": 42,
+    "baru_7_hari_terakhir": 5,
+    "pertumbuhan_harian": [
+      { "tanggal": "2026-07-01", "jumlah": 2 },
+      { "tanggal": "2026-07-02", "jumlah": 1 }
+    ]
+  }
+}
+```
+`pertumbuhan_harian` mencakup 30 hari terakhir, urut lama → baru — cocok buat data grafik.
+
+---
+
 ## Format Error Umum
 ```json
 { "status": "error", "pesan": "Penjelasan error" }

@@ -522,6 +522,39 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Daftar Pengguna",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/admin/pengguna",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "pengguna"]
+            },
+            "description": "Admin only. Semua pengguna terdaftar, urut baru ke lama."
+          },
+          "response": []
+        },
+        {
+          "name": "Statistik Pertumbuhan Pengguna",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/admin/statistik",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "statistik"]
+            },
+            "description": "Admin only. Total pengguna, pengguna baru 7 hari terakhir, dan data harian 30 hari terakhir buat grafik."
+          },
+          "response": []
+        }
+      ]
     }
   ]
 }

@@ -42,6 +42,10 @@ app.use('/api/artikel', artikelRoutes);
 const beratRoutes = require('./src/routes/beratRoutes');
 app.use('/api/berat', beratRoutes);
 
+// Pasang rute admin (daftar pengguna & statistik) → semua alamatnya diawali /api/admin
+const adminRoutes = require('./src/routes/adminRoutes');
+app.use('/api/admin', adminRoutes);
+
 // Endpoint tes server hidup
 app.get('/', (req, res) => {
   res.json({ status: 'success', message: 'Server Meal Tracker jalan!', tim: 'DB13-G003' });
