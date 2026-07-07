@@ -166,6 +166,11 @@ Response: `{ status, jumlah, data: [{ id, pengirim: "pengguna"|"ai", isi_pesan, 
 ### GET /artikel?kategori=resep — publik, tanpa login
 ### GET /artikel/:id — publik
 
+### POST /artikel/upload-gambar — admin only
+Body: `multipart/form-data`, field `gambar` (file, maks 5MB, harus image/*).
+Response: `{ "status": "success", "data": { "url": "https://....supabase.co/storage/v1/object/public/artikel-gambar/..." } }`
+Panggil ini dulu buat dapetin URL-nya, baru isi hasilnya ke field `url_gambar` pas POST/PUT artikel di bawah.
+
 ### POST /artikel — admin only (login + peran `admin`)
 Body: `{ "judul": "...", "kategori": "...", "konten": "...", "url_sumber": "...", "url_gambar": "..." }`
 

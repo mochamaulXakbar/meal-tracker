@@ -464,6 +464,26 @@
           "response": []
         },
         {
+          "name": "Upload Gambar Artikel (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "gambar", "type": "file", "src": [] }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/artikel/upload-gambar",
+              "host": ["{{base_url}}"],
+              "path": ["artikel", "upload-gambar"]
+            },
+            "description": "Admin only. Upload 1 file gambar (maks 5MB), balik URL publik buat dipakai di field url_gambar."
+          },
+          "response": []
+        },
+        {
           "name": "Tambah Artikel (Admin)",
           "request": {
             "method": "POST",

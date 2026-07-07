@@ -21,6 +21,25 @@ const ambilSatu = async (req, res) => {
   res.json({ status: 'success', data });
 };
 
+// UPLOAD gambar — admin only. Terima 1 file (field "gambar"), balikin URL publiknya.
+const uploadGambar = async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ status: 'error', pesan: 'File gambar wajib dikirim (field "gambar")' });
+  }
+
+  const ekstensi = req.file.originalname.split('.').pop();
+  const namaFile = `${Date.now()}-${Math.round(Math.random() * 1e9)}.${ekstensi}`;
+
+  const { error } = await supabase.storage
+    .from('artikel-gambar')
+    .upload(namaFile, req.file.buffer, { contentType: req.file.mimetype });
+
+  if (error) return res.status(500).json({ status: 'error', pesan: error.message });
+
+  const { data } = supabase.storage.from('artikel-gambar').getPublicUrl(namaFile);
+  res.json({ status: 'success', data: { url: data.publicUrl } });
+};
+
 // CREATE — admin only
 const tambahArtikel = async (req, res) => {
   const id_penulis = req.userId;
@@ -70,4 +89,4 @@ const hapusArtikel = async (req, res) => {
   res.json({ status: 'success', pesan: 'Artikel berhasil dihapus' });
 };
 
-module.exports = { ambilSemua, ambilSatu, tambahArtikel, editArtikel, hapusArtikel };
+module.exports = { ambilSemua, ambilSatu, tambahArtikel, editArtikel, hapusArtikel, uploadGambar };
