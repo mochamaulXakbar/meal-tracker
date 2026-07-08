@@ -11,7 +11,7 @@
     ]
   },
   "variable": [
-    { "key": "base_url", "value": "http://localhost:3000/api", "type": "string" },
+    { "key": "base_url", "value": "https://meal-tracker-cp2l.onrender.com/api", "type": "string" },
     { "key": "token", "value": "", "type": "string" },
     { "key": "admin_email", "value": "", "type": "string" },
     { "key": "admin_password", "value": "", "type": "string" }

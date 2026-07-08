@@ -1,6 +1,7 @@
 # Kontrak API — Meal Tracker and Planner (DB13-G003)
 
-Base URL (lokal): `http://localhost:3000/api`
+Base URL (produksi/live): `https://meal-tracker-cp2l.onrender.com/api`
+Base URL (lokal, kalau jalanin backend sendiri): `http://localhost:3000/api`
 
 Semua endpoint yang butuh login mengharuskan header:
 ```
