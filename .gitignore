@@ -76,6 +76,8 @@ web_modules/
 .env
 .env.*
 !.env.example
+# Kecuali .env frontend — isinya cuma URL publik, bukan secret (lihat frontend/.gitignore)
+!frontend/.env
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache

@@ -11,8 +11,9 @@ node_modules
 dist
 dist-ssr
 *.local
-.env
-!.env.example
+# .env frontend sengaja TIDAK di-gitignore — isinya cuma URL publik (VITE_API_BASE_URL),
+# bukan secret, dan ikut ke-bundle ke JS browser juga. Beda dengan .env backend yang berisi
+# kunci rahasia dan WAJIB tetap di-gitignore.
 
 # Editor directories and files
 .vscode/*
