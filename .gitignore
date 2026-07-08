@@ -1,6 +1,10 @@
 # Kredensial admin lokal buat testing Postman — jangan pernah ke-commit
 docs/Meal_Tracker_Local.postman_environment.json
 
+# File lokal Claude Code (session/permission), tapi launch.json tetap di-track
+.claude/settings.local.json
+.claude/scheduled_tasks.lock
+
 # Logs
 logs
 *.log
