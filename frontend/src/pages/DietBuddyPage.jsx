@@ -15,6 +15,7 @@ export default function DietBuddyPage() {
   const [input, setInput] = useState('');
   const [memuat, setMemuat] = useState(true);
   const [mengirim, setMengirim] = useState(false);
+  const [error, setError] = useState('');
   const bawahRef = useRef(null);
 
   async function muatRiwayat() {
@@ -39,11 +40,15 @@ export default function DietBuddyPage() {
     const isiPesan = teks ?? input;
     if (!isiPesan.trim()) return;
     setInput('');
+    setError('');
     setMengirim(true);
     setPesan((p) => [...p, { id: `sementara-${Date.now()}`, pengirim: 'pengguna', isi_pesan: isiPesan }]);
     try {
       await api.post('/chat', { pesan: isiPesan });
-      muatRiwayat();
+      await muatRiwayat();
+    } catch (err) {
+      setError(err.message || 'Gagal mengirim pesan, AI Diet Buddy sedang sibuk. Coba lagi sebentar.');
+      setPesan((p) => p.filter((m) => !String(m.id).startsWith('sementara-')));
     } finally {
       setMengirim(false);
     }
@@ -51,13 +56,21 @@ export default function DietBuddyPage() {
 
   async function hapusPesan(id) {
     if (String(id).startsWith('sementara-')) return;
-    await api.delete(`/chat/${id}`);
-    muatRiwayat();
+    try {
+      await api.delete(`/chat/${id}`);
+      muatRiwayat();
+    } catch (err) {
+      setError(err.message);
+    }
   }
 
   async function hapusSemua() {
-    await api.delete('/chat');
-    setPesan([]);
+    try {
+      await api.delete('/chat');
+      setPesan([]);
+    } catch (err) {
+      setError(err.message);
+    }
   }
 
   return (
@@ -132,6 +145,10 @@ export default function DietBuddyPage() {
         )}
         <div ref={bawahRef} />
       </div>
+
+      {error && (
+        <div className="bg-red-50 text-red-700 text-sm rounded-xl px-4 py-2.5 mt-3">{error}</div>
+      )}
 
       <form
         onSubmit={(e) => {
