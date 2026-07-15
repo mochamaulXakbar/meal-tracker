@@ -8,6 +8,7 @@ import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import Spinner from '../components/ui/Spinner';
+import bgDashboard from '../assets/contoh_background.png';
 
 const badgeKategori = {
   Kurus: 'bg-blue-100 text-blue-700',
@@ -77,7 +78,14 @@ export default function DashboardPage() {
   }
 
   return (
-    <div>
+    <div className="relative left-1/2 isolate -ml-[50vw] -mt-8 -mb-8 min-h-[calc(100vh-4rem)] w-screen overflow-hidden">
+      <div
+        className="absolute inset-0 -z-20 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${bgDashboard})` }}
+      />
+      <div className="absolute inset-0 -z-10" />
+      <div className="relative z-10 mx-auto max-w-7xl px-6 py-10">
+      <div className="rounded-3xl border border-white/60 bg-white/90 p-6 shadow-2xl backdrop-blur-md md:p-8">
       <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
       <p className="text-gray-500 mt-1 mb-8">Ringkasan aktivitas dan progres kesehatanmu</p>
 
@@ -122,8 +130,9 @@ export default function DashboardPage() {
         </div>
       )}
 
-      <div className="grid lg:grid-cols-[65%_35%] gap-6 mb-8">
-        <Card>
+      <div className="relative mb-8 grid grid-cols-1 gap-6 md:grid-cols-3">
+        <div className="relative z-10 min-w-0 md:col-span-2">
+          <Card className="h-full">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-gray-900">Progres Berat Badan</h3>
             <Button variant="secondary" onClick={() => setModalBeratTerbuka(true)} className="h-9 px-3 text-xs">
@@ -143,48 +152,54 @@ export default function DashboardPage() {
             <p className="text-sm text-gray-400 py-16 text-center">Belum ada data berat badan.</p>
           )}
         </Card>
+        </div>
 
-        <Card>
-          <h3 className="font-semibold text-gray-900 mb-4">Ringkasan Makan Hari Ini</h3>
-          {riwayatHariIni.length > 0 ? (
-            <ul className="flex flex-col gap-3">
-              {riwayatHariIni.map((r) => (
-                <li key={r.id} className="flex justify-between text-sm">
-                  <span className="text-gray-700">{r.nama_makanan}</span>
-                  <span className="text-gray-400">{r.kalori} kkal</span>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <div className="text-center py-8">
-              <p className="text-sm text-gray-400 mb-3">Belum ada makanan dicatat hari ini.</p>
-              <Link to="/cari-makanan">
-                <Button variant="secondary" className="text-xs h-9 px-3">Cari Makanan</Button>
-              </Link>
-            </div>
-          )}
-        </Card>
+        <div className="relative z-10 min-w-0">
+          <Card className="h-full">
+            <h3 className="font-semibold text-gray-900 mb-4">Ringkasan Makan Hari Ini</h3>
+            {riwayatHariIni.length > 0 ? (
+              <ul className="flex flex-col gap-3">
+                {riwayatHariIni.map((r) => (
+                  <li key={r.id} className="flex justify-between text-sm">
+                    <span className="text-gray-700">{r.nama_makanan}</span>
+                    <span className="text-gray-400">{r.kalori} kkal</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="text-center py-8">
+                <p className="text-sm text-gray-400 mb-3">Belum ada makanan dicatat hari ini.</p>
+                <Link to="/cari-makanan">
+                  <Button variant="secondary" className="text-xs h-9 px-3">Cari Makanan</Button>
+                </Link>
+              </div>
+            )}
+          </Card>
+        </div>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-4">
-        <Link to="/cari-makanan">
-          <Card className="flex flex-col items-center text-center py-6 hover:border-primary transition">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+        <Link to="/cari-makanan" className="block h-full">
+          <Card className="flex h-full flex-col items-center text-center py-6 hover:border-primary transition">
             <Search size={20} className="text-primary mb-2" />
             <span className="font-medium text-gray-900 text-sm">Cari Makanan</span>
           </Card>
         </Link>
-        <Link to="/meal-planner">
-          <Card className="flex flex-col items-center text-center py-6 hover:border-primary transition">
+        <Link to="/meal-planner" className="block h-full">
+          <Card className="flex h-full flex-col items-center text-center py-6 hover:border-primary transition">
             <Sparkles size={20} className="text-primary mb-2" />
             <span className="font-medium text-gray-900 text-sm">Generate Menu AI</span>
           </Card>
         </Link>
-        <Link to="/diet-buddy">
-          <Card className="flex flex-col items-center text-center py-6 hover:border-primary transition">
+        <Link to="/diet-buddy" className="block h-full">
+          <Card className="flex h-full flex-col items-center text-center py-6 hover:border-primary transition">
             <MessageCircle size={20} className="text-primary mb-2" />
             <span className="font-medium text-gray-900 text-sm">Chat Diet Buddy</span>
           </Card>
         </Link>
+      </div>
+
+      </div>
       </div>
 
       {modalBeratTerbuka && (
@@ -214,3 +229,5 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+

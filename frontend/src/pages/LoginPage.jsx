@@ -4,6 +4,7 @@ import { Leaf, Mail, Lock, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
+import salad from '../assets/salad.jpg';
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -30,15 +31,20 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex flex-col lg:flex-row">
       <div className="lg:w-[55%] bg-primary text-white p-10 flex flex-col justify-center relative">
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${salad})` }}
+        />
+        <div className="absolute inset-0 bg-black/45" />
         <Link to="/" className="absolute top-8 left-8 flex items-center gap-2 text-sm text-white/90 hover:text-white">
           <ArrowLeft size={16} /> Kembali ke Beranda
         </Link>
-        <div className="max-w-md mx-auto">
+        <div className="relative z-10 max-w-md mx-auto">
           <div className="flex items-center gap-2 mb-8">
             <Leaf size={20} />
             <span className="font-semibold">NutriTrack</span>
           </div>
-          <h1 className="text-4xl font-bold mb-4">Hidup Sehat, Dimulai dari Piring</h1>
+          <h1 className="font-indonesia text-4xl font-bold mb-4"> Hidup Sehat, Dimulai dari Piring</h1>
           <p className="text-white/80">
             Lacak nutrisi, rencanakan diet, dan capai tujuan kesehatanmu bersama NutriTrack.
           </p>
