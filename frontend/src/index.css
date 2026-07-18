@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Playwrite+ID:wght@100..400&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -5,6 +6,7 @@
   --color-primary-dark: #1e5c2b;
   --color-primary-light: #eaf3de;
   --font-sans: 'Segoe UI', system-ui, Roboto, sans-serif;
+  --font-indonesia: 'Playwrite ID', san-serif;
 }
 
 body {
