@@ -4,6 +4,7 @@ import { Leaf, Mail, Lock, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
+import AuthLoadingPage from '../components/ui/AuthLoadingPage';
 import salad from '../assets/salad.jpg';
 
 export default function LoginPage() {
@@ -28,6 +29,10 @@ export default function LoginPage() {
     }
   }
 
+  if (memuat) {
+    return <AuthLoadingPage title="Masuk ke dashboard..." />;
+  }
+
   return (
     <div className="min-h-screen flex flex-col lg:flex-row">
       <div className="lg:w-[55%] bg-primary text-white p-10 flex flex-col justify-center relative">
@@ -44,15 +49,17 @@ export default function LoginPage() {
             <Leaf size={20} />
             <span className="font-semibold">NutriTrack</span>
           </div>
-          <h1 className="font-indonesia text-4xl font-bold mb-4"> Hidup Sehat, Dimulai dari Piring</h1>
+          <h1 className="font-indonesia text-4xl font-bold leading-[1.75] mb-6">
+            Hidup Sehat, Dimulai dari Piring
+          </h1>
           <p className="text-white/80">
             Lacak nutrisi, rencanakan diet, dan capai tujuan kesehatanmu bersama NutriTrack.
           </p>
         </div>
       </div>
 
-      <div className="lg:w-[45%] flex items-center justify-center p-8">
-        <div className="w-full max-w-sm">
+      <div className="lg:w-[45%] flex items-center justify-center bg-primary-light/40 p-8">
+        <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-8 shadow-xl">
           <h2 className="text-2xl font-bold text-gray-900 mb-1">Selamat Datang Kembali</h2>
           <p className="text-gray-500 mb-6">Masuk ke akun NutriTrack Anda</p>
 

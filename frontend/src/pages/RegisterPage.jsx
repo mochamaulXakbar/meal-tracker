@@ -4,6 +4,8 @@ import { Leaf, Mail, Lock, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
+import AuthLoadingPage from '../components/ui/AuthLoadingPage';
+import salad from '../assets/salad.jpg';
 
 export default function RegisterPage() {
   const { register } = useAuth();
@@ -39,26 +41,37 @@ export default function RegisterPage() {
     }
   }
 
+  if (memuat) {
+    return <AuthLoadingPage title="Membuat akun..." />;
+  }
+
   return (
     <div className="min-h-screen flex flex-col lg:flex-row">
       <div className="lg:w-[55%] bg-primary text-white p-10 flex flex-col justify-center relative">
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${salad})` }}
+        />
+        <div className="absolute inset-0 bg-black/45" />
         <Link to="/" className="absolute top-8 left-8 flex items-center gap-2 text-sm text-white/90 hover:text-white">
           <ArrowLeft size={16} /> Kembali ke Beranda
         </Link>
-        <div className="max-w-md mx-auto">
+        <div className="relative z-10 max-w-md mx-auto">
           <div className="flex items-center gap-2 mb-8">
             <Leaf size={20} />
             <span className="font-semibold">NutriTrack</span>
           </div>
-          <h1 className="text-4xl font-bold mb-4">Mulai Perjalanan Sehat Anda</h1>
+          <h1 className="font-indonesia text-4xl font-bold leading-[1.75] mb-6">
+            Mulai Perjalanan Sehat Anda
+          </h1>
           <p className="text-white/80">
             Bergabunglah dan mulai tracking nutrisimu hari ini juga.
           </p>
         </div>
       </div>
 
-      <div className="lg:w-[45%] flex items-center justify-center p-8">
-        <div className="w-full max-w-sm">
+      <div className="lg:w-[45%] flex items-center justify-center bg-primary-light/40 p-8">
+        <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-8 shadow-xl">
           <h2 className="text-2xl font-bold text-gray-900 mb-1">Buat Akun Baru</h2>
           <p className="text-gray-500 mb-6">Daftar gratis dan mulai tracking nutrisimu</p>
 

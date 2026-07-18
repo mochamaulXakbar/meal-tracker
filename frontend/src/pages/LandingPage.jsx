@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Leaf, Scale, Search, Sparkles, MessageCircle, History, UserPlus, ClipboardList, Utensils } from 'lucide-react';
 import Button from '../components/ui/Button';
+import salad from '../assets/salad.jpg';
 
 const fitur = [
   { icon: Scale, judul: 'Kalkulator BMI/TDEE', desc: 'Hitung kebutuhan kalori harianmu secara akurat.' },
@@ -17,9 +18,12 @@ const langkah = [
 ];
 
 export default function LandingPage() {
+  const navLinkClass =
+    'relative font-medium text-gray-600 transition-colors duration-300 hover:text-primary after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:rounded-full after:bg-primary after:transition-all after:duration-300 hover:after:w-full';
+
   return (
     <div className="min-h-screen bg-white">
-      <header className="sticky top-0 z-30 bg-white border-b border-gray-200 h-16">
+      <header className="sticky top-0 z-30 h-16 border-b border-primary/10 bg-white/90 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-lg bg-primary-light flex items-center justify-center">
@@ -27,12 +31,14 @@ export default function LandingPage() {
             </div>
             <span className="font-semibold text-gray-900">NutriTrack</span>
           </div>
-          <nav className="hidden md:flex items-center gap-6 text-sm text-gray-600">
-            <a href="#fitur">Fitur</a>
-            <a href="#cara-kerja">Cara Kerja</a>
+          <nav className="hidden md:flex items-center gap-6 text-sm">
+            <a href="#fitur" className={navLinkClass}>Fitur</a>
+            <a href="#cara-kerja" className={navLinkClass}>Cara Kerja</a>
           </nav>
           <div className="flex items-center gap-3">
-            <Link to="/login" className="text-sm font-medium text-gray-700">Masuk</Link>
+            <Link to="/login">
+              <Button variant="secondary">Masuk</Button>
+            </Link>
             <Link to="/register">
               <Button>Daftar Gratis</Button>
             </Link>
@@ -49,7 +55,7 @@ export default function LandingPage() {
             Hidup Sehat<br /><span className="text-primary">Dimulai dari Piring</span>
           </h1>
           <p className="text-gray-500 mt-6 text-lg">
-            Lacak nutrisi, hitung kalori, dan rencanakan diet sehat dengan bantuan AI — semua dalam satu platform yang simpel dan personal.
+            Lacak nutrisi, hitung kalori, dan rencanakan diet sehat dengan bantuan AI - semua dalam satu platform yang simpel dan personal.
           </p>
           <div className="flex gap-3 mt-8">
             <Link to="/register">
@@ -59,7 +65,7 @@ export default function LandingPage() {
               <Button variant="secondary" className="px-6">Masuk ke Akun</Button>
             </Link>
           </div>
-          <p className="text-sm text-gray-400 mt-4">Tidak perlu kartu kredit · Mulai dalam 30 detik</p>
+          <p className="text-sm text-gray-400 mt-4">Tidak perlu kartu kredit - Mulai dalam 30 detik</p>
         </div>
         <div className="rounded-2xl overflow-hidden shadow-lg">
           <img
@@ -70,19 +76,21 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section id="fitur" className="max-w-7xl mx-auto px-6 py-20">
-        <div className="text-center mb-12">
-          <span className="text-primary text-sm font-medium">FITUR LENGKAP</span>
-          <h2 className="text-3xl font-bold text-gray-900 mt-2">Semua yang kamu butuhkan, dalam satu tempat</h2>
-        </div>
-        <div className="grid md:grid-cols-3 gap-6">
-          {fitur.map((f) => (
-            <div key={f.judul} className="bg-gray-50 rounded-2xl p-6">
-              <f.icon size={22} className="text-primary mb-3" />
-              <h3 className="font-semibold text-gray-900 mb-1">{f.judul}</h3>
-              <p className="text-sm text-gray-500">{f.desc}</p>
-            </div>
-          ))}
+      <section id="fitur" className="bg-primary-light py-20">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <span className="text-primary text-sm font-medium">FITUR LENGKAP</span>
+            <h2 className="text-3xl font-bold text-gray-900 mt-2">Semua yang kamu butuhkan, dalam satu tempat</h2>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            {fitur.map((f) => (
+              <div key={f.judul} className="bg-white rounded-2xl p-6 transition duration-300 hover:-translate-y-1 hover:shadow-lg">
+                <f.icon size={22} className="text-primary mb-3" />
+                <h3 className="font-semibold text-gray-900 mb-1">{f.judul}</h3>
+                <p className="text-sm text-gray-500">{f.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -91,12 +99,16 @@ export default function LandingPage() {
           <span className="text-primary text-sm font-medium">CARA KERJA</span>
           <h2 className="text-3xl font-bold text-gray-900 mt-2">Mulai dalam 3 langkah</h2>
         </div>
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-3 gap-6">
           {langkah.map((l, i) => (
-            <div key={l.judul}>
-              <div className="w-10 h-10 rounded-full bg-primary-light text-primary flex items-center justify-center font-semibold mb-4">
-                {i + 1}
+            <div
+              key={l.judul}
+              className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-lg"
+            >
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary-light text-primary">
+                <l.icon size={22} />
               </div>
+              <p className="mb-2 text-xs font-semibold text-primary">Langkah {i + 1}</p>
               <h3 className="font-semibold text-gray-900 mb-1">{l.judul}</h3>
               <p className="text-sm text-gray-500">{l.desc}</p>
             </div>
@@ -105,37 +117,40 @@ export default function LandingPage() {
       </section>
 
       <section className="max-w-7xl mx-auto px-6 pb-20">
-        <div className="bg-primary rounded-2xl p-10 text-center text-white">
-          <h2 className="text-2xl font-bold mb-2">Siap memulai perjalanan hidup sehat Anda?</h2>
-          <p className="text-white/80 mb-6">Bergabung sekarang — gratis selamanya.</p>
-          <Link to="/register">
-            <Button variant="secondary" className="px-6">Daftar Gratis Sekarang</Button>
-          </Link>
+        <div className="relative overflow-hidden rounded-2xl p-10 text-center text-white shadow-xl">
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url(${salad})` }}
+          />
+          <div className="absolute inset-0 bg-primary-dark/75" />
+          <div className="relative z-10">
+            <h2 className="text-2xl font-bold mb-2">Siap memulai perjalanan hidup sehat Anda?</h2>
+            <p className="text-white/80 mb-6">Bergabung sekarang - gratis selamanya.</p>
+            <Link to="/register">
+              <Button variant="secondary" className="px-6">Daftar Gratis Sekarang</Button>
+            </Link>
+          </div>
         </div>
       </section>
 
-      <footer className="border-t border-gray-200">
-        <div className="max-w-7xl mx-auto px-6 py-10 grid md:grid-cols-4 gap-8 text-sm">
+      <footer className="bg-primary text-white">
+        <div className="max-w-7xl mx-auto px-6 py-10 grid md:grid-cols-3 gap-8 text-sm">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <Leaf size={16} className="text-primary" />
-              <span className="font-semibold text-gray-900">NutriTrack</span>
+              <Leaf size={16} className="text-primary-light" />
+              <span className="font-semibold">NutriTrack</span>
             </div>
-            <p className="text-gray-400">© 2026 NutriTrack.</p>
+            <p className="text-white/60">© 2026 NutriTrack.</p>
           </div>
           <div>
-            <h4 className="font-medium text-gray-900 mb-2">Produk</h4>
-            <a href="#fitur" className="block text-gray-500 mb-1">Fitur</a>
-            <a href="#cara-kerja" className="block text-gray-500">Cara Kerja</a>
+            <h4 className="font-medium mb-2">Produk</h4>
+            <a href="#fitur" className="block text-white/70 transition-colors hover:text-white mb-1">Fitur</a>
+            <a href="#cara-kerja" className="block text-white/70 transition-colors hover:text-white">Cara Kerja</a>
           </div>
           <div>
-            <h4 className="font-medium text-gray-900 mb-2">Sumber Daya</h4>
-            <Link to="/artikel" className="block text-gray-500">Artikel</Link>
-          </div>
-          <div>
-            <h4 className="font-medium text-gray-900 mb-2">Akun</h4>
-            <Link to="/login" className="block text-gray-500 mb-1">Masuk</Link>
-            <Link to="/register" className="block text-gray-500">Daftar</Link>
+            <h4 className="font-medium mb-2">Akun</h4>
+            <Link to="/login" className="block text-white/70 transition-colors hover:text-white mb-1">Masuk</Link>
+            <Link to="/register" className="block text-white/70 transition-colors hover:text-white">Daftar</Link>
           </div>
         </div>
       </footer>
