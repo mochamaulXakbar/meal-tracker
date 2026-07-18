@@ -1,6 +1,7 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import Navbar from './Navbar';
+import PageBackdrop from './PageBackdrop';
 import Spinner from '../ui/Spinner';
 
 export default function ProtectedRoute() {
@@ -21,9 +22,9 @@ export default function ProtectedRoute() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <main className="max-w-7xl mx-auto px-6 py-8">
+      <PageBackdrop>
         <Outlet />
-      </main>
+      </PageBackdrop>
     </div>
   );
 }

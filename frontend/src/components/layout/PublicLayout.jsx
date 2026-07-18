@@ -1,13 +1,14 @@
 import { Outlet } from 'react-router-dom';
 import Navbar from './Navbar';
+import PageBackdrop from './PageBackdrop';
 
 export default function PublicLayout() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <main className="max-w-7xl mx-auto px-6 py-8">
+      <PageBackdrop>
         <Outlet />
-      </main>
+      </PageBackdrop>
     </div>
   );
 }

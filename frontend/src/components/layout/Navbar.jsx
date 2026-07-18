@@ -1,12 +1,11 @@
 import { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { Leaf } from 'lucide-react';
+import { Leaf, LogOut, User } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Button from '../ui/Button';
 
 const menu = [
   { label: 'Dashboard', to: '/dashboard' },
-  { label: 'Profil', to: '/profil' },
   { label: 'Cari Makanan', to: '/cari-makanan' },
   { label: 'Riwayat', to: '/riwayat' },
   { label: 'Meal Planner', to: '/meal-planner' },
@@ -91,11 +90,18 @@ export default function Navbar() {
                 <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-md z-20 py-2">
                   <div className="px-4 py-2 text-sm text-gray-500 truncate">{user?.email}</div>
                   <div className="border-t border-gray-100 my-1" />
+                  <Link
+                    to="/profil"
+                    onClick={() => setDropdownTerbuka(false)}
+                    className="flex w-full items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                  >
+                    <User size={15} /> Profil
+                  </Link>
                   <button
                     onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-50"
+                    className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-50"
                   >
-                    Keluar
+                    <LogOut size={15} /> Keluar
                   </button>
                 </div>
               </>

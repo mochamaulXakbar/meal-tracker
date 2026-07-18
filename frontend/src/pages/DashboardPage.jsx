@@ -8,7 +8,6 @@ import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import Spinner from '../components/ui/Spinner';
-import bgDashboard from '../assets/contoh_background.png';
 
 const badgeKategori = {
   Kurus: 'bg-blue-100 text-blue-700',
@@ -78,14 +77,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="relative left-1/2 isolate -ml-[50vw] -mt-8 -mb-8 min-h-[calc(100vh-4rem)] w-screen overflow-hidden">
-      <div
-        className="absolute inset-0 -z-20 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${bgDashboard})` }}
-      />
-      <div className="absolute inset-0 -z-10" />
-      <div className="relative z-10 mx-auto max-w-7xl px-6 py-10">
-      <div className="rounded-3xl border border-white/60 bg-white/90 p-6 shadow-2xl backdrop-blur-md md:p-8">
+    <>
       <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
       <p className="text-gray-500 mt-1 mb-8">Ringkasan aktivitas dan progres kesehatanmu</p>
 
@@ -199,9 +191,6 @@ export default function DashboardPage() {
         </Link>
       </div>
 
-      </div>
-      </div>
-
       {modalBeratTerbuka && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl p-6 w-full max-w-sm">
@@ -226,8 +215,6 @@ export default function DashboardPage() {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
-
-

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../lib/api';
 import Card from '../components/ui/Card';
@@ -36,6 +36,18 @@ export default function ProfilPage() {
   const [error, setError] = useState('');
   const [menyimpan, setMenyimpan] = useState(false);
 
+  useEffect(() => {
+    if (!user) return;
+    setForm({
+      nama_lengkap: user?.nama_lengkap || '',
+      tanggal_lahir: user?.tanggal_lahir || '',
+      jenis_kelamin: user?.jenis_kelamin || '',
+      tinggi_cm: user?.tinggi_cm ?? '',
+      berat_kg: user?.berat_kg ?? '',
+      tingkat_aktivitas: user?.tingkat_aktivitas || '',
+    });
+  }, [user]);
+
   function ubah(field, value) {
     setForm((f) => ({ ...f, [field]: value }));
   }
@@ -59,11 +71,13 @@ export default function ProfilPage() {
   const estimasiBmi = hitungEstimasiBmi(form.tinggi_cm, form.berat_kg);
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold text-gray-900">Profil & Pengaturan</h1>
-      <p className="text-gray-500 mt-1 mb-8">Data ini digunakan untuk menghitung kebutuhan kalori Anda</p>
+    <div className="mx-auto max-w-xl">
+      <div className="text-center">
+        <h1 className="text-3xl font-bold text-gray-900">Profil & Pengaturan</h1>
+        <p className="text-gray-500 mt-1 mb-8">Data ini digunakan untuk menghitung kebutuhan kalori Anda</p>
+      </div>
 
-      <Card className="max-w-xl">
+      <Card>
         <h2 className="text-xs font-semibold text-gray-400 tracking-wide mb-4">DATA PRIBADI</h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <Input
@@ -73,7 +87,7 @@ export default function ProfilPage() {
             onChange={(e) => ubah('nama_lengkap', e.target.value)}
           />
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid gap-4 sm:grid-cols-2">
             <Input
               type="date"
               label="Tanggal Lahir"
@@ -91,7 +105,7 @@ export default function ProfilPage() {
             </Select>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid gap-4 sm:grid-cols-2">
             <Input
               type="number"
               label="Tinggi Badan (cm)"
