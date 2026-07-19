@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect  } from 'react';
 import { Search, Plus, X } from 'lucide-react';
 import { api } from '../lib/api';
 import Card from '../components/ui/Card';
@@ -15,7 +15,9 @@ export default function CariMakananPage() {
   const [error, setError] = useState('');
   const [modalMakanan, setModalMakanan] = useState(null);
   const [jenisMakan, setJenisMakan] = useState('sarapan');
+    const [jumlahGram, setJumlahGram] = useState(100);
   const [pesanSukses, setPesanSukses] = useState('');
+  
 
   async function cari(kata) {
     if (!kata.trim()) return;
@@ -30,6 +32,11 @@ export default function CariMakananPage() {
       setMemuat(false);
     }
   }
+useEffect(() => {
+    setKataKunci('Nasi & Lauk');
+    cari('Nasi & Lauk');
+  }, []);
+
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -43,13 +50,14 @@ export default function CariMakananPage() {
 
   async function tambahKeRiwayat() {
     if (!modalMakanan) return;
+    const faktor = jumlahGram / 100;
     try {
       await api.post('/riwayat', {
-        nama_makanan: modalMakanan.nama,
-        kalori: modalMakanan.kalori,
-        protein_g: modalMakanan.protein,
-        karbohidrat_g: modalMakanan.karbohidrat,
-        lemak_g: modalMakanan.lemak,
+        nama_makanan: `${modalMakanan.nama} (${jumlahGram}g)`,
+        kalori: Math.round(modalMakanan.kalori * faktor),
+        protein_g: +(modalMakanan.protein * faktor).toFixed(1),
+        karbohidrat_g: +(modalMakanan.karbohidrat * faktor).toFixed(1),
+        lemak_g: +(modalMakanan.lemak * faktor).toFixed(1),
         jenis_makan: jenisMakan,
       });
       setPesanSukses(`${modalMakanan.nama} ditambahkan ke riwayat.`);
@@ -115,7 +123,7 @@ export default function CariMakananPage() {
                   <span className="text-xs bg-pink-100 text-pink-800 rounded-lg px-2 py-0.5">L: {m.lemak}g</span>
                 </div>
               </div>
-              <Button className="h-9 px-3 text-xs shrink-0" onClick={() => setModalMakanan(m)}>
+              <Button className="h-9 px-3 text-xs shrink-0" onClick={() => { setModalMakanan(m); setJumlahGram(100); }}>
                 <Plus size={14} /> Tambah
               </Button>
             </Card>
@@ -138,7 +146,34 @@ export default function CariMakananPage() {
                 <X size={18} className="text-gray-400" />
               </button>
             </div>
-            <p className="text-sm text-gray-600 mb-4">{modalMakanan.nama} — {modalMakanan.kalori} kkal</p>
+            <p className="text-sm text-gray-600 mb-1">{modalMakanan.nama}</p>
+            <p className="text-xs text-gray-400 mb-4">Nilai gizi per 100 gram: {modalMakanan.kalori} kkal</p>
+
+            <label className="text-sm font-medium text-gray-700 block mb-1">Jumlah (gram)</label>
+            <input
+              type="number"
+              min="1"
+              step="10"
+              value={jumlahGram}
+              onChange={(e) => setJumlahGram(Number(e.target.value) || 0)}
+              className="w-full h-11 rounded-xl border border-gray-300 px-4 mb-3 focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+
+            <div className="flex gap-2 mb-4 flex-wrap">
+              <span className="text-xs bg-amber-100 text-amber-800 rounded-lg px-2 py-0.5">
+                Kal: {Math.round(modalMakanan.kalori * (jumlahGram / 100))}
+              </span>
+              <span className="text-xs bg-blue-100 text-blue-800 rounded-lg px-2 py-0.5">
+                P: {(modalMakanan.protein * (jumlahGram / 100)).toFixed(1)}g
+              </span>
+              <span className="text-xs bg-green-100 text-green-800 rounded-lg px-2 py-0.5">
+                K: {(modalMakanan.karbohidrat * (jumlahGram / 100)).toFixed(1)}g
+              </span>
+              <span className="text-xs bg-pink-100 text-pink-800 rounded-lg px-2 py-0.5">
+                L: {(modalMakanan.lemak * (jumlahGram / 100)).toFixed(1)}g
+              </span>
+            </div>
+
             <Select label="Jenis Makan" value={jenisMakan} onChange={(e) => setJenisMakan(e.target.value)}>
               <option value="sarapan">Sarapan</option>
               <option value="siang">Makan Siang</option>

@@ -1,5 +1,5 @@
 import { NavLink, useNavigate, Navigate, Outlet } from 'react-router-dom';
-import { Leaf, PenLine, BarChart3, ArrowLeft, LogOut } from 'lucide-react';
+import { Leaf, PenLine, BarChart3, LogOut } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Spinner from '../ui/Spinner';
 
@@ -60,12 +60,6 @@ export default function AdminLayout() {
         <div className="p-3 border-t border-white/10">
           <p className="text-xs text-white/50 px-3 mb-2">Masuk sebagai</p>
           <p className="text-sm px-3 mb-3 truncate">{user.email}</p>
-          <button
-            onClick={() => navigate('/dashboard')}
-            className="w-full flex items-center gap-2 px-3 py-2 text-sm text-white/70 hover:bg-white/10 rounded-xl"
-          >
-            <ArrowLeft size={16} /> Kembali ke App
-          </button>
           <button
             onClick={handleLogout}
             className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-300 hover:bg-white/10 rounded-xl"

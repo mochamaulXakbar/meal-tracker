@@ -30,26 +30,48 @@ export default function ArtikelDetailPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-3xl mx-auto">
       <Link to="/artikel" className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-primary mb-6">
         <ArrowLeft size={16} /> Kembali ke Artikel
       </Link>
 
-      {artikel.url_gambar && (
-        <img src={artikel.url_gambar} alt={artikel.judul} className="w-full aspect-video object-cover rounded-2xl mb-6" />
-      )}
-
       <span className="text-xs font-medium bg-primary-light text-primary rounded-lg px-2 py-1">
         {artikel.kategori}
       </span>
-      <h1 className="text-3xl font-bold text-gray-900 mt-3 mb-6">{artikel.judul}</h1>
-      <p className="text-gray-700 whitespace-pre-line leading-relaxed">{artikel.konten}</p>
 
-      {artikel.url_sumber && (
-        <a href={artikel.url_sumber} target="_blank" rel="noreferrer" className="inline-block mt-8 text-sm text-primary">
-          Sumber referensi →
-        </a>
+      <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mt-4 mb-3 leading-tight">
+        {artikel.judul}
+      </h1>
+
+      {artikel.dibuat_pada && (
+        <p className="text-sm text-gray-400 mb-6">
+          {new Date(artikel.dibuat_pada).toLocaleDateString('id-ID', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+          })}
+        </p>
       )}
+
+      {artikel.url_gambar && (
+        <img
+          src={artikel.url_gambar}
+          alt={artikel.judul}
+          className="w-full aspect-video object-cover rounded-2xl mb-8"
+        />
+      )}
+
+      <div className="max-w-2xl">
+        <p className="text-gray-700 whitespace-pre-line leading-loose text-[17px]">
+          {artikel.konten}
+        </p>
+
+        {artikel.url_sumber && (
+          <a href={artikel.url_sumber} target="_blank" rel="noreferrer" className="inline-block mt-8 text-sm text-primary font-medium border-t border-gray-100 pt-6 w-full">
+            Sumber referensi →
+          </a>
+        )}
+      </div>
     </div>
   );
 }

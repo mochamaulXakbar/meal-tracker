@@ -92,7 +92,7 @@ export default function DietBuddyPage() {
         )}
       </div>
 
-      <div className="flex-1 overflow-y-auto flex flex-col gap-4 pr-1">
+     <div className="flex-1 overflow-y-auto flex flex-col gap-4 pr-1">
         {memuat ? (
           <div className="flex justify-center py-16"><Spinner /></div>
         ) : pesan.length === 0 ? (
@@ -143,6 +143,20 @@ export default function DietBuddyPage() {
             </div>
           ))
         )}
+
+        {mengirim && (
+          <div className="flex gap-2 justify-start">
+            <div className="w-8 h-8 rounded-full bg-primary-light flex items-center justify-center shrink-0">
+              <Bot size={14} className="text-primary" />
+            </div>
+            <div className="bg-gray-100 rounded-2xl px-4 py-3 flex items-center gap-1.5">
+              <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+              <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+              <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></span>
+            </div>
+          </div>
+        )}
+
         <div ref={bawahRef} />
       </div>
 

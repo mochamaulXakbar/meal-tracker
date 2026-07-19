@@ -98,7 +98,7 @@ export default function DashboardPage() {
         <div className="grid md:grid-cols-3 gap-6 mb-8">
           <Card>
             <div className="flex items-center gap-2 text-gray-400 text-sm mb-2">
-              <Scale size={16} /> BMI
+              <Scale size={16} className="text-blue-500"  /> BMI
             </div>
             <div className="text-2xl font-bold text-gray-900">{kalkulasi.bmi}</div>
             <span className={`inline-block mt-2 text-xs font-medium px-2 py-1 rounded-lg ${badgeKategori[kalkulasi.kategori_bmi] || 'bg-gray-100 text-gray-700'}`}>
@@ -107,14 +107,14 @@ export default function DashboardPage() {
           </Card>
           <Card>
             <div className="flex items-center gap-2 text-gray-400 text-sm mb-2">
-              <Flame size={16} /> TDEE
+              <Flame size={16} className="text-orange-500" /> TDEE
             </div>
             <div className="text-2xl font-bold text-gray-900">{kalkulasi.tdee.toLocaleString()}</div>
             <span className="text-xs text-gray-400">kkal/hari</span>
           </Card>
           <Card>
             <div className="flex items-center gap-2 text-gray-400 text-sm mb-2">
-              <Calendar size={16} /> Kalori Hari Ini
+              <Calendar size={16} className="text-green-500" /> Kalori Hari Ini
             </div>
             <div className="text-2xl font-bold text-gray-900">{totalKaloriHariIni.toLocaleString()}</div>
             <span className="text-xs text-gray-400">dari target {kalkulasi.tdee.toLocaleString()} kkal</span>

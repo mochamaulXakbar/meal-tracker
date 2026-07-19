@@ -20,8 +20,12 @@ export default function LoginPage() {
     setError('');
     setMemuat(true);
     try {
-      await login(email, password);
-      navigate('/dashboard');
+      const data = await login(email, password);
+      if (data.peran === 'admin') {
+        navigate('/admin/panel');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err) {
       setError(err.message);
     } finally {
@@ -44,7 +48,7 @@ export default function LoginPage() {
         <Link to="/" className="absolute top-8 left-8 flex items-center gap-2 text-sm text-white/90 hover:text-white">
           <ArrowLeft size={16} /> Kembali ke Beranda
         </Link>
-        <div className="relative z-10 max-w-md mx-auto">
+        <div className="relative z-10 max-w-md mx-auto slide-top">
           <div className="flex items-center gap-2 mb-8">
             <Leaf size={20} />
             <span className="font-semibold">NutriTrack</span>
