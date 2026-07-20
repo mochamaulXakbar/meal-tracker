@@ -33,7 +33,6 @@ export default function CariMakananPage() {
     }
   }
 useEffect(() => {
-    setKataKunci('Nasi & Lauk');
     cari('Nasi & Lauk');
   }, []);
 

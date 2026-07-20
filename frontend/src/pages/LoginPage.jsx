@@ -39,7 +39,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row">
-      <div className="lg:w-[55%] bg-primary text-white p-10 flex flex-col justify-center relative">
+      <div className="lg:w-[55%] text-white p-10 pt-20 lg:pt-10 flex flex-col justify-center relative bg-cover bg-center">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: `url(${salad})` }}

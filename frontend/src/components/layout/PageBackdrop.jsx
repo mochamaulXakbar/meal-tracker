@@ -7,7 +7,7 @@ export default function PageBackdrop({ children }) {
         className="absolute inset-0 -z-20 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: `url(${bgPage})` }}
       />
-      <div className="absolute inset-0 -z-10 bg-black/10" />
+      <div className="absolute inset-0 -z-10 bg-black/5" />
       <div className="mx-auto max-w-7xl">
         <div className="rounded-3xl border border-white/60 bg-white/90 p-5 shadow-2xl backdrop-blur-md sm:p-6 md:p-8">
           {children}

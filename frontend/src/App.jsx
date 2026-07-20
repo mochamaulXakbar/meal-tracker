@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/layout/ProtectedRoute';
-import PublicLayout from './components/layout/PublicLayout';
 import AdminLayout from './components/layout/AdminLayout';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
@@ -16,7 +15,6 @@ import ArtikelPage from './pages/ArtikelPage';
 import ArtikelDetailPage from './pages/ArtikelDetailPage';
 import KelolaArtikelPage from './pages/admin/KelolaArtikelPage';
 import PanelAdminPage from './pages/admin/PanelAdminPage';
-import PlaceholderPage from './pages/PlaceholderPage';
 
 export default function App() {
   return (
@@ -27,10 +25,7 @@ export default function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
 
-          <Route element={<PublicLayout />}>
-            <Route path="/artikel" element={<ArtikelPage />} />
-            <Route path="/artikel/:id" element={<ArtikelDetailPage />} />
-          </Route>
+          
 
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<DashboardPage />} />
@@ -39,6 +34,8 @@ export default function App() {
             <Route path="/riwayat" element={<RiwayatMakananPage />} />
             <Route path="/meal-planner" element={<MealPlannerPage />} />
             <Route path="/diet-buddy" element={<DietBuddyPage />} />
+            <Route path="/artikel" element={<ArtikelPage />} />
+            <Route path="/artikel/:id" element={<ArtikelDetailPage />} />
           </Route>
 
           <Route element={<AdminLayout />}>
