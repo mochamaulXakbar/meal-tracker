@@ -107,25 +107,28 @@ useEffect(() => {
       ) : hasil.length > 0 ? (
         <div className="grid md:grid-cols-2 gap-4">
           {hasil.map((m) => (
-            <Card key={m.id_makanan} className="flex items-center gap-4">
-              {m.gambar ? (
-                <img src={m.gambar} alt={m.nama} className="w-14 h-14 rounded-xl object-cover shrink-0" />
-              ) : (
-                <div className="w-14 h-14 rounded-xl bg-gray-100 shrink-0" />
-              )}
-              <div className="flex-1 min-w-0">
-                <p className="font-medium text-gray-900 truncate">{m.nama}</p>
-                <div className="flex gap-2 mt-1 flex-wrap">
-                  <span className="text-xs bg-amber-100 text-amber-800 rounded-lg px-2 py-0.5">Kal: {m.kalori}</span>
-                  <span className="text-xs bg-blue-100 text-blue-800 rounded-lg px-2 py-0.5">P: {m.protein}g</span>
-                  <span className="text-xs bg-green-100 text-green-800 rounded-lg px-2 py-0.5">K: {m.karbohidrat}g</span>
-                  <span className="text-xs bg-pink-100 text-pink-800 rounded-lg px-2 py-0.5">L: {m.lemak}g</span>
-                </div>
-              </div>
-              <Button className="h-9 px-3 text-xs shrink-0" onClick={() => { setModalMakanan(m); setJumlahGram(100); }}>
-                <Plus size={14} /> Tambah
-              </Button>
-            </Card>
+            <Card key={m.id_makanan} className="flex flex-col sm:flex-row sm:items-center gap-4 overflow-hidden">
+  {m.gambar ? (
+    <img src={m.gambar} alt={m.nama} className="w-14 h-14 rounded-xl object-cover shrink-0" />
+  ) : (
+    <div className="w-14 h-14 rounded-xl bg-gray-100 shrink-0" />
+  )}
+  <div className="flex-1 min-w-0">
+    <p className="font-medium text-gray-900 truncate">{m.nama}</p>
+    <div className="flex gap-2 mt-1 flex-wrap">
+      <span className="text-xs bg-amber-100 text-amber-800 rounded-lg px-2 py-0.5">Kal: {m.kalori}</span>
+      <span className="text-xs bg-blue-100 text-blue-800 rounded-lg px-2 py-0.5">P: {m.protein}g</span>
+      <span className="text-xs bg-green-100 text-green-800 rounded-lg px-2 py-0.5">K: {m.karbohidrat}g</span>
+      <span className="text-xs bg-pink-100 text-pink-800 rounded-lg px-2 py-0.5">L: {m.lemak}g</span>
+    </div>
+  </div>
+  <Button
+    className="h-9 px-3 text-xs shrink-0 w-full sm:w-auto justify-center"
+    onClick={() => { setModalMakanan(m); setJumlahGram(100); }}
+  >
+    <Plus size={14} /> Tambah
+  </Button>
+</Card>
           ))}
         </div>
       ) : (
