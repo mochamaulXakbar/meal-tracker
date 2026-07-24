@@ -47,13 +47,15 @@ const generateMenu = async (req, res) => {
 Kamu ahli gizi. Buatkan rekomendasi menu makan untuk SATU HARI (sarapan, makan siang, makan malam)
 untuk orang Indonesia dengan total kalori sekitar ${tdee} kkal.
 Gunakan makanan Indonesia yang umum & terjangkau.${baginPantangan}
+Untuk tiap menu, sertakan juga daftar bahan (dengan takaran kira-kira, contoh "Nasi putih - 150 gram")
+dan langkah memasak singkat yang jelas per tahap (3-6 langkah, tiap langkah 1 kalimat).
 Jawab HANYA dalam format JSON valid (tanpa teks lain, tanpa markdown), struktur persis seperti ini:
 {
   "total_target_kalori": ${tdee},
   "menu": {
-    "sarapan": { "nama": "...", "kalori": 0, "deskripsi": "..." },
-    "makan_siang": { "nama": "...", "kalori": 0, "deskripsi": "..." },
-    "makan_malam": { "nama": "...", "kalori": 0, "deskripsi": "..." }
+    "sarapan": { "nama": "...", "kalori": 0, "deskripsi": "ringkasan singkat 1 kalimat", "bahan": ["...", "..."], "langkah": ["...", "..."] },
+    "makan_siang": { "nama": "...", "kalori": 0, "deskripsi": "ringkasan singkat 1 kalimat", "bahan": ["...", "..."], "langkah": ["...", "..."] },
+    "makan_malam": { "nama": "...", "kalori": 0, "deskripsi": "ringkasan singkat 1 kalimat", "bahan": ["...", "..."], "langkah": ["...", "..."] }
   }
 }`;
 
@@ -104,4 +106,32 @@ const ambilRiwayatMenu = async (req, res) => {
   res.json({ status: 'success', jumlah: data.length, data });
 };
 
-module.exports = { generateMenu, ambilRiwayatMenu };
+// DELETE /api/meal-plan/riwayat/:id — hapus 1 riwayat menu (1 baris aja)
+const hapusRencanaMenu = async (req, res) => {
+  const id_pengguna = req.userId;   // dari token
+  const { id } = req.params;        // ID rencana menu dari alamat URL
+
+  try {
+    // .eq('id_pengguna', ...) → PENTING: cuma boleh hapus riwayat MILIK SENDIRI
+    const { data, error } = await supabase
+      .from('rencana_menu')
+      .delete()
+      .eq('id', id)
+      .eq('id_pengguna', id_pengguna)
+      .select();
+
+    if (error) {
+      return res.status(500).json({ status: 'error', pesan: error.message });
+    }
+
+    if (!data || data.length === 0) {
+      return res.status(404).json({ status: 'error', pesan: 'Riwayat tidak ditemukan' });
+    }
+
+    res.json({ status: 'success', pesan: 'Riwayat menu berhasil dihapus', data: data[0] });
+  } catch (err) {
+    return res.status(500).json({ status: 'error', pesan: 'Gagal menghapus riwayat', detail: err.message });
+  }
+};
+
+module.exports = { generateMenu, ambilRiwayatMenu, hapusRencanaMenu };
