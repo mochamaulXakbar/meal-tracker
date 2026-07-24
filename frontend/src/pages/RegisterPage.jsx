@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Leaf, Mail, Lock, ArrowLeft } from 'lucide-react';
+import { Mail, Lock, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
 import AuthLoadingPage from '../components/ui/AuthLoadingPage';
 import salad from '../assets/salad.jpeg';
+import logoIcon from '../assets/logo-icon.png';
 
 export default function RegisterPage() {
   const { register } = useAuth();
@@ -58,8 +59,8 @@ export default function RegisterPage() {
         </Link>
         <div className="relative z-10 max-w-md mx-auto slide-top">
           <div className="flex items-center gap-2 mb-8">
-            <Leaf size={20} />
-            <span className="font-semibold">NutriTrack</span>
+            <img src={logoIcon} alt="Meal Tracker" className="w-8 h-8" />
+            <span className="font-semibold">Meal Tracker</span>
           </div>
           <h1 className="font-indonesia text-4xl font-bold leading-[1.75] mb-6">
             Mulai Perjalanan Sehat Anda

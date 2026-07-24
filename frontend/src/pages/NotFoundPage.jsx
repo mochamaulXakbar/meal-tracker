@@ -1,15 +1,14 @@
 import { Link } from 'react-router-dom';
-import { Leaf, Compass } from 'lucide-react';
+import { Compass } from 'lucide-react';
 import Button from '../components/ui/Button';
+import logoIcon from '../assets/logo-icon.png';
 
 export default function NotFoundPage() {
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center px-6 text-center">
       <div className="flex items-center gap-2 mb-10">
-        <div className="w-7 h-7 rounded-lg bg-primary-light flex items-center justify-center">
-          <Leaf size={16} className="text-primary" />
-        </div>
-        <span className="font-semibold text-gray-900">NutriTrack</span>
+        <img src={logoIcon} alt="Meal Tracker" className="w-7 h-7" />
+        <span className="font-semibold text-gray-900">Meal Tracker</span>
       </div>
 
       <div className="w-16 h-16 rounded-2xl bg-primary-light flex items-center justify-center mb-6">

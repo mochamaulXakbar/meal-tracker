@@ -1,7 +1,8 @@
 import { NavLink, useNavigate, Navigate, Outlet } from 'react-router-dom';
-import { Leaf, PenLine, BarChart3, LogOut } from 'lucide-react';
+import { PenLine, BarChart3, LogOut } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Spinner from '../ui/Spinner';
+import logoIcon from '../../assets/logo-icon.png';
 
 export default function AdminLayout() {
   const { user, memuat, isAdmin, logout } = useAuth();
@@ -28,8 +29,8 @@ export default function AdminLayout() {
       <aside className="w-64 bg-[#123a1a] text-white flex flex-col shrink-0">
         <div className="p-6">
           <div className="flex items-center gap-2">
-            <Leaf size={18} />
-            <span className="font-semibold">NutriTrack</span>
+            <img src={logoIcon} alt="Meal Tracker" className="w-6 h-6" />
+            <span className="font-semibold">Meal Tracker</span>
           </div>
           <span className="text-xs font-medium text-amber-400 mt-1 block">ADMIN</span>
         </div>

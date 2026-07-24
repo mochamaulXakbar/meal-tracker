@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
-import { Leaf, Scale, Search, Sparkles, MessageCircle, History, UserPlus, ClipboardList, Utensils } from 'lucide-react';
+import { Scale, Search, Sparkles, MessageCircle, History, UserPlus, ClipboardList, Utensils } from 'lucide-react';
 import Button from '../components/ui/Button';
 import salad from '../assets/salad.jpg';
+import logoIcon from '../assets/logo-icon.png';
 
 const fitur = [
   { icon: Scale, judul: 'Kalkulator BMI/TDEE', desc: 'Hitung kebutuhan kalori harianmu secara akurat.' },
@@ -26,10 +27,8 @@ export default function LandingPage() {
       <header className="sticky top-0 z-30 h-16 border-b border-primary/10 bg-white/90 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-primary-light flex items-center justify-center">
-              <Leaf size={16} className="text-primary" />
-            </div>
-            <span className="font-semibold text-gray-900">NutriTrack</span>
+            <img src={logoIcon} alt="Meal Tracker" className="w-7 h-7" />
+            <span className="font-semibold text-gray-900">Meal Tracker</span>
           </div>
           <nav className="hidden md:flex items-center gap-6 text-sm">
             <a href="#fitur" className={navLinkClass}>Fitur</a>
@@ -137,10 +136,10 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-6 py-10 grid md:grid-cols-3 gap-8 text-sm">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <Leaf size={16} className="text-primary-light" />
-              <span className="font-semibold">NutriTrack</span>
+              <img src={logoIcon} alt="Meal Tracker" className="w-6 h-6" />
+              <span className="font-semibold">Meal Tracker</span>
             </div>
-            <p className="text-white/60">© 2026 NutriTrack.</p>
+            <p className="text-white/60">© 2026 Meal Tracker and Planner.</p>
           </div>
           <div>
             <h4 className="font-medium mb-2">Produk</h4>

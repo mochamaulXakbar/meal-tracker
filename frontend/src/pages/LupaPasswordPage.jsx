@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Leaf, Mail, ArrowLeft } from 'lucide-react';
+import { Mail, ArrowLeft } from 'lucide-react';
 import { api } from '../lib/api';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
+import logoIcon from '../assets/logo-icon.png';
 
 export default function LupaPasswordPage() {
   const [email, setEmail] = useState('');
@@ -33,10 +34,8 @@ export default function LupaPasswordPage() {
         </Link>
 
         <div className="flex items-center gap-2 mb-6">
-          <div className="w-7 h-7 rounded-lg bg-primary-light flex items-center justify-center">
-            <Leaf size={16} className="text-primary" />
-          </div>
-          <span className="font-semibold text-gray-900">NutriTrack</span>
+          <img src={logoIcon} alt="Meal Tracker" className="w-7 h-7" />
+          <span className="font-semibold text-gray-900">Meal Tracker</span>
         </div>
 
         {terkirim ? (

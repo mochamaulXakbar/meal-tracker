@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Leaf, Lock } from 'lucide-react';
+import { Lock } from 'lucide-react';
 import { api } from '../lib/api';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
+import logoIcon from '../assets/logo-icon.png';
 
 function ambilTokenDariHash() {
   const hash = window.location.hash.startsWith('#') ? window.location.hash.slice(1) : window.location.hash;
@@ -47,10 +48,8 @@ export default function ResetPasswordPage() {
     <div className="min-h-screen flex items-center justify-center bg-primary-light/40 p-8">
       <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-8 shadow-xl">
         <div className="flex items-center gap-2 mb-6">
-          <div className="w-7 h-7 rounded-lg bg-primary-light flex items-center justify-center">
-            <Leaf size={16} className="text-primary" />
-          </div>
-          <span className="font-semibold text-gray-900">NutriTrack</span>
+          <img src={logoIcon} alt="Meal Tracker" className="w-7 h-7" />
+          <span className="font-semibold text-gray-900">Meal Tracker</span>
         </div>
 
         {!token ? (

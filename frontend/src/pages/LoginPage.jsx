@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Leaf, Mail, Lock, ArrowLeft } from 'lucide-react';
+import { Mail, Lock, ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
 import AuthLoadingPage from '../components/ui/AuthLoadingPage';
 import salad from '../assets/salad.jpg';
+import logoIcon from '../assets/logo-icon.png';
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -50,14 +51,14 @@ export default function LoginPage() {
         </Link>
         <div className="relative z-10 max-w-md mx-auto slide-top">
           <div className="flex items-center gap-2 mb-8">
-            <Leaf size={20} />
-            <span className="font-semibold">NutriTrack</span>
+            <img src={logoIcon} alt="Meal Tracker" className="w-8 h-8" />
+            <span className="font-semibold">Meal Tracker</span>
           </div>
           <h1 className="font-indonesia text-4xl font-bold leading-[1.75] mb-6">
             Hidup Sehat, Dimulai dari Piring
           </h1>
           <p className="text-white/80">
-            Lacak nutrisi, rencanakan diet, dan capai tujuan kesehatanmu bersama NutriTrack.
+            Lacak nutrisi, rencanakan diet, dan capai tujuan kesehatanmu bersama Meal Tracker and Planner.
           </p>
         </div>
       </div>
@@ -65,7 +66,7 @@ export default function LoginPage() {
       <div className="lg:w-[45%] flex items-center justify-center bg-primary-light/40 p-8">
         <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-8 shadow-xl">
           <h2 className="text-2xl font-bold text-gray-900 mb-1">Selamat Datang Kembali</h2>
-          <p className="text-gray-500 mb-6">Masuk ke akun NutriTrack Anda</p>
+          <p className="text-gray-500 mb-6">Masuk ke akun Meal Tracker and Planner Anda</p>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div className="relative">

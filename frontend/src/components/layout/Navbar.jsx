@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { Leaf, LogOut, User, Menu, X } from 'lucide-react';
+import { LogOut, User, Menu, X } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Button from '../ui/Button';
+import logoIcon from '../../assets/logo-icon.png';
 
 const menu = [
   { label: 'Dashboard', to: '/dashboard' },
@@ -42,10 +43,8 @@ export default function Navbar() {
               {menuMobileTerbuka ? <X size={22} /> : <Menu size={22} />}
             </button>
           )}
-          <div className="w-7 h-7 rounded-lg bg-primary-light flex items-center justify-center">
-            <Leaf size={16} className="text-primary" />
-          </div>
-          <span className="font-semibold text-gray-900">NutriTrack</span>
+          <img src={logoIcon} alt="Meal Tracker" className="w-7 h-7" />
+          <span className="font-semibold text-gray-900">Meal Tracker</span>
         </div>
 
         {user ? (
