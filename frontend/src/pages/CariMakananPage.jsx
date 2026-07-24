@@ -8,6 +8,18 @@ import Spinner from '../components/ui/Spinner';
 
 const kategoriPopuler = ['Sarapan', 'Nasi & Lauk', 'Sayuran', 'Protein', 'Buah-buahan', 'Minuman', 'Mie & Pasta'];
 
+// Edamam cuma paham istilah Inggris — label kategori tetap bahasa Indonesia
+// buat ditampilkan, tapi kata yang dikirim ke API dialihkan ke sini
+const queryKategori = {
+  'Sarapan': 'breakfast',
+  'Nasi & Lauk': 'rice',
+  'Sayuran': 'vegetables',
+  'Protein': 'protein',
+  'Buah-buahan': 'fruit',
+  'Minuman': 'drink',
+  'Mie & Pasta': 'noodles',
+};
+
 export default function CariMakananPage() {
   const [kataKunci, setKataKunci] = useState('');
   const [hasil, setHasil] = useState([]);
@@ -28,12 +40,13 @@ export default function CariMakananPage() {
       setHasil(res.data);
     } catch (err) {
       setError(err.message);
+      setHasil([]); // biar hasil lama nggak nyangkut pas pencarian baru gagal
     } finally {
       setMemuat(false);
     }
   }
 useEffect(() => {
-    cari('Nasi & Lauk');
+    cari(queryKategori['Nasi & Lauk']);
   }, []);
 
 
@@ -44,7 +57,7 @@ useEffect(() => {
 
   function klikKategori(kategori) {
     setKataKunci(kategori);
-    cari(kategori);
+    cari(queryKategori[kategori] || kategori);
   }
 
   async function tambahKeRiwayat() {
