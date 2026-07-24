@@ -5,6 +5,8 @@ const multer = require('multer');
 const router = express.Router();
 const { ambilProfil, lengkapiProfil, hitungKalkulasi, uploadFotoProfil } = require('../controllers/penggunaController');
 const { cekLogin } = require('../middleware/autentikasi');
+const validasi = require('../middleware/validasi');
+const { lengkapiProfilSkema } = require('../middleware/skema');
 
 // Simpen file di memori dulu (bukan disk) — langsung diteruskan ke Supabase Storage
 const upload = multer({
@@ -20,7 +22,7 @@ const upload = multer({
 router.get('/profil', cekLogin, ambilProfil);
 
 // PUT /profil → lewat satpam dulu (cekLogin), baru jalanin lengkapiProfil
-router.put('/profil', cekLogin, lengkapiProfil);
+router.put('/profil', cekLogin, validasi(lengkapiProfilSkema), lengkapiProfil);
 router.get('/kalkulasi', cekLogin, hitungKalkulasi);
 router.post('/foto', cekLogin, upload.single('foto'), uploadFotoProfil);
 

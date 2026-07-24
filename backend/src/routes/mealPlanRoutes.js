@@ -4,8 +4,10 @@ const express = require('express');
 const router = express.Router();
 const { generateMenu, ambilRiwayatMenu, hapusRencanaMenu } = require('../controllers/mealPlanController');
 const { cekLogin } = require('../middleware/autentikasi');
+const validasi = require('../middleware/validasi');
+const { generateMenuSkema } = require('../middleware/skema');
 
-router.post('/generate', cekLogin, generateMenu);
+router.post('/generate', cekLogin, validasi(generateMenuSkema), generateMenu);
 router.get('/riwayat', cekLogin, ambilRiwayatMenu);
 router.delete('/riwayat/:id', cekLogin, hapusRencanaMenu);
 

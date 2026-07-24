@@ -5,6 +5,8 @@ const multer = require('multer');
 const router = express.Router();
 const { ambilSemua, ambilSatu, tambahArtikel, editArtikel, hapusArtikel, uploadGambar } = require('../controllers/artikelController');
 const { cekLogin, cekAdmin } = require('../middleware/autentikasi');
+const validasi = require('../middleware/validasi');
+const { tambahArtikelSkema, editArtikelSkema } = require('../middleware/skema');
 
 // Simpen file di memori dulu (bukan disk) — langsung diteruskan ke Supabase Storage
 const upload = multer({
@@ -22,8 +24,8 @@ router.get('/:id', ambilSatu);
 
 // Admin only — login dulu, lalu cek admin
 router.post('/upload-gambar', cekLogin, cekAdmin, upload.single('gambar'), uploadGambar);
-router.post('/', cekLogin, cekAdmin, tambahArtikel);
-router.put('/:id', cekLogin, cekAdmin, editArtikel);
+router.post('/', cekLogin, cekAdmin, validasi(tambahArtikelSkema), tambahArtikel);
+router.put('/:id', cekLogin, cekAdmin, validasi(editArtikelSkema), editArtikel);
 router.delete('/:id', cekLogin, cekAdmin, hapusArtikel);
 
 module.exports = router;
