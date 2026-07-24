@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Sparkles, ChevronDown, Coffee, Sun, Moon, Trash2, X, ChefHat } from 'lucide-react';
 import { api } from '../lib/api';
+import { useToast } from '../context/ToastContext';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import Spinner from '../components/ui/Spinner';
@@ -106,12 +107,12 @@ function ModalResep({ waktu, menu, onClose }) {
 }
 
 export default function MealPlannerPage() {
+  const { showError, showSuccess } = useToast();
   const [pantangan, setPantangan] = useState('');
   const [menuTerbaru, setMenuTerbaru] = useState(null);
   const [riwayat, setRiwayat] = useState([]);
   const [memuatGenerate, setMemuatGenerate] = useState(false);
   const [memuatRiwayat, setMemuatRiwayat] = useState(true);
-  const [error, setError] = useState('');
   const [riwayatTerbuka, setRiwayatTerbuka] = useState(null);
   const [resepDilihat, setResepDilihat] = useState(null); // { waktu, menu }
 
@@ -131,13 +132,12 @@ export default function MealPlannerPage() {
 
   async function generate() {
     setMemuatGenerate(true);
-    setError('');
     try {
       const res = await api.post('/meal-plan/generate', pantangan ? { pantangan } : {});
       setMenuTerbaru(res.data);
       muatRiwayat();
     } catch (err) {
-      setError(err.message);
+      showError(err.message);
     } finally {
       setMemuatGenerate(false);
     }
@@ -147,8 +147,9 @@ export default function MealPlannerPage() {
     try {
       await api.delete(`/meal-plan/riwayat/${id}`);
       setRiwayat((r) => r.filter((item) => item.id !== id));
+      showSuccess('Riwayat menu berhasil dihapus.');
     } catch (err) {
-      setError(err.message);
+      showError(err.message);
     }
   }
 
@@ -172,8 +173,6 @@ export default function MealPlannerPage() {
           onChange={(e) => setPantangan(e.target.value)}
         />
       </div>
-
-      {error && <div className="bg-red-50 text-red-700 text-sm rounded-xl px-4 py-3 mb-6">{error}</div>}
 
       {memuatGenerate ? (
         <div className="flex flex-col items-center justify-center py-16 gap-3">
