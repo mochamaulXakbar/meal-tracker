@@ -85,4 +85,56 @@ const register = async (req, res) => {
   res.status(201).json({ status: 'success', pesan: 'Registrasi berhasil', data: profil });
 };
 
-module.exports = { register, login };
+// Fungsi: Kirim email lupa password (link reset dari Supabase)
+const lupaPassword = async (req, res) => {
+  const { email } = req.body || {};
+
+  if (!email) {
+    return res.status(400).json({ status: 'error', pesan: 'Email wajib diisi' });
+  }
+
+  const redirectTo = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/reset-password`;
+  const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
+
+  // Selalu jawab sukses walau email nggak terdaftar — biar orang lain nggak bisa
+  // nebak-nebak email siapa aja yang punya akun (privasi user)
+  if (error) {
+    console.error('Gagal kirim email reset password:', error.message);
+  }
+
+  res.json({
+    status: 'success',
+    pesan: 'Kalau email tersebut terdaftar, link reset password sudah dikirim. Cek inbox/folder spam kamu.'
+  });
+};
+
+// Fungsi: Set password baru pakai token dari link email reset
+const resetPassword = async (req, res) => {
+  const { access_token, password_baru } = req.body || {};
+
+  if (!access_token || !password_baru) {
+    return res.status(400).json({ status: 'error', pesan: 'Token dan password baru wajib diisi' });
+  }
+  if (password_baru.length < 6) {
+    return res.status(400).json({ status: 'error', pesan: 'Password minimal 6 karakter' });
+  }
+
+  // Validasi token & cari tau ini punya siapa
+  const { data: userData, error: userError } = await supabase.auth.getUser(access_token);
+  if (userError || !userData?.user) {
+    return res.status(401).json({ status: 'error', pesan: 'Link reset password tidak valid atau sudah kedaluwarsa' });
+  }
+
+  // Update password lewat Admin API
+  const { error: updateError } = await supabase.auth.admin.updateUserById(userData.user.id, {
+    password: password_baru
+  });
+
+  if (updateError) {
+    return res.status(400).json({ status: 'error', pesan: updateError.message });
+  }
+
+  res.json({ status: 'success', pesan: 'Password berhasil diubah, silakan login dengan password baru.' });
+};
+
+module.exports = { register, login, lupaPassword, resetPassword };

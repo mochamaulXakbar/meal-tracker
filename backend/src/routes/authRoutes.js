@@ -3,7 +3,7 @@
 const express = require('express');
 const rateLimit = require('express-rate-limit');
 const router = express.Router();
-const { register, login } = require('../controllers/authController');
+const { register, login, lupaPassword, resetPassword } = require('../controllers/authController');
 
 // Batasi percobaan login/register — cegah brute force tebak password
 const batasAuth = rateLimit({
@@ -17,6 +17,8 @@ const batasAuth = rateLimit({
 // POST /register → jalanin fungsi register
 router.post('/register', batasAuth, register);
 router.post('/login', batasAuth, login);
+router.post('/lupa-password', batasAuth, lupaPassword);
+router.post('/reset-password', batasAuth, resetPassword);
 
 
 module.exports = router;

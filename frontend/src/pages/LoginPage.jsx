@@ -91,6 +91,10 @@ export default function LoginPage() {
               />
             </div>
 
+            <Link to="/lupa-password" className="text-sm text-primary font-medium text-right -mt-2">
+              Lupa password?
+            </Link>
+
             {error && <p className="text-sm text-red-600">{error}</p>}
 
             <Button type="submit" disabled={memuat} className="w-full mt-2">
