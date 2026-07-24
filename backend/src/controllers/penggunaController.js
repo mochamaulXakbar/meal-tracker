@@ -1,33 +1,7 @@
 // src/controllers/penggunaController.js — logika fitur pengguna/profil
 
 const supabase = require('../config/supabase');
-
-// --- Alat bantu kalkulasi ---
-
-// Hitung umur dari tanggal lahir
-const hitungUmur = (tanggalLahir) => {
-  const lahir = new Date(tanggalLahir);
-  const kini = new Date();
-  let umur = kini.getFullYear() - lahir.getFullYear();
-  const belumUltah =
-    kini.getMonth() < lahir.getMonth() ||
-    (kini.getMonth() === lahir.getMonth() && kini.getDate() < lahir.getDate());
-  if (belumUltah) umur--;
-  return umur;
-};
-
-// Faktor pengali sesuai tingkat aktivitas
-const faktorAktivitas = {
-  sedentary: 1.2, light: 1.375, moderate: 1.55, active: 1.725, very_active: 1.9
-};
-
-// Kategori BMI (standar WHO)
-const kategoriBMI = (bmi) => {
-  if (bmi < 18.5) return 'Kurus';
-  if (bmi < 25)   return 'Normal';
-  if (bmi < 30)   return 'Gemuk';
-  return 'Obesitas';
-};
+const { hitungUmur, hitungBMI, kategoriBMI, hitungBMR, hitungTDEE } = require('../utils/kalkulasi');
 
 // Fungsi: Ambil profil pengguna yang login (buat load ulang dasbor tanpa login lagi)
 const ambilProfil = async (req, res) => {
@@ -108,18 +82,9 @@ const hitungKalkulasi = async (req, res) => {
   }
 
   const umur = hitungUmur(tanggal_lahir);
-
-  // BMI
-  const tinggiM = tinggi_cm / 100;
-  const bmi = Math.round((berat_kg / (tinggiM * tinggiM)) * 10) / 10;
-
-  // BMR (Mifflin-St Jeor)
-  let bmr = 10 * berat_kg + 6.25 * tinggi_cm - 5 * umur;
-  bmr += (jenis_kelamin === 'pria') ? 5 : -161;
-
-  // TDEE
-  const faktor = faktorAktivitas[tingkat_aktivitas] || 1.2;
-  const tdee = Math.round(bmr * faktor);
+  const bmi = hitungBMI(berat_kg, tinggi_cm);
+  const bmr = hitungBMR({ beratKg: berat_kg, tinggiCm: tinggi_cm, umur, jenisKelamin: jenis_kelamin });
+  const tdee = hitungTDEE(bmr, tingkat_aktivitas);
 
   res.json({
     status: 'success',
