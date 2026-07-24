@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../lib/api';
 import Spinner from '../components/ui/Spinner';
+import Pagination from '../components/ui/Pagination';
 
 const kategoriList = ['Semua', 'tips', 'kesehatan', 'resep'];
 const labelKategori = { tips: 'Tips', kesehatan: 'Kesehatan', resep: 'Resep' };
@@ -10,15 +11,26 @@ export default function ArtikelPage() {
   const [artikel, setArtikel] = useState([]);
   const [kategoriAktif, setKategoriAktif] = useState('Semua');
   const [memuat, setMemuat] = useState(true);
+  const [halaman, setHalaman] = useState(1);
+  const [totalHalaman, setTotalHalaman] = useState(1);
 
   useEffect(() => {
     setMemuat(true);
-    const path = kategoriAktif === 'Semua' ? '/artikel' : `/artikel?kategori=${kategoriAktif}`;
+    const base = kategoriAktif === 'Semua' ? '/artikel' : `/artikel?kategori=${kategoriAktif}`;
+    const sep = base.includes('?') ? '&' : '?';
     api
-      .get(path)
-      .then((res) => setArtikel(res.data))
+      .get(`${base}${sep}page=${halaman}&limit=9`)
+      .then((res) => {
+        setArtikel(res.data);
+        setTotalHalaman(res.total_halaman || 1);
+      })
       .finally(() => setMemuat(false));
-  }, [kategoriAktif]);
+  }, [kategoriAktif, halaman]);
+
+  function gantiKategori(k) {
+    setKategoriAktif(k);
+    setHalaman(1);
+  }
 
   return (
     <div>
@@ -29,7 +41,7 @@ export default function ArtikelPage() {
         {kategoriList.map((k) => (
           <button
             key={k}
-            onClick={() => setKategoriAktif(k)}
+            onClick={() => gantiKategori(k)}
             className={`text-sm px-3 py-1.5 rounded-full border transition ${
               kategoriAktif === k
                 ? 'bg-primary text-white border-primary'
@@ -65,6 +77,8 @@ export default function ArtikelPage() {
           ))}
         </div>
       )}
+
+      <Pagination halaman={halaman} totalHalaman={totalHalaman} onChange={setHalaman} />
     </div>
   );
 }

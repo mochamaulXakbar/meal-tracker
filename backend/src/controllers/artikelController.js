@@ -2,15 +2,31 @@
 
 const supabase = require('../config/supabase');
 
-// READ semua — publik (bisa filter ?kategori=resep)
+// READ semua — publik (bisa filter ?kategori=resep, pagination ?page=1&limit=9)
 const ambilSemua = async (req, res) => {
   const { kategori } = req.query;
-  let query = supabase.from('artikel').select('*').order('dibuat_pada', { ascending: false });
+  const page = Math.max(1, parseInt(req.query.page) || 1);
+  const limit = Math.min(50, Math.max(1, parseInt(req.query.limit) || 9));
+  const dari = (page - 1) * limit;
+  const sampai = dari + limit - 1;
+
+  let query = supabase
+    .from('artikel')
+    .select('*', { count: 'exact' })
+    .order('dibuat_pada', { ascending: false })
+    .range(dari, sampai);
   if (kategori) query = query.eq('kategori', kategori);
 
-  const { data, error } = await query;
+  const { data, error, count } = await query;
   if (error) return res.status(500).json({ status: 'error', pesan: error.message });
-  res.json({ status: 'success', jumlah: data.length, data });
+  res.json({
+    status: 'success',
+    jumlah: data.length,
+    total: count || 0,
+    halaman: page,
+    total_halaman: Math.max(1, Math.ceil((count || 0) / limit)),
+    data
+  });
 };
 
 // READ satu — publik

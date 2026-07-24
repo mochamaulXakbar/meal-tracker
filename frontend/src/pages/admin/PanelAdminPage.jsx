@@ -2,40 +2,66 @@ import { useEffect, useState } from 'react';
 import { Users, TrendingUp, Search, Trash2, X } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { api } from '../../lib/api';
+import { useToast } from '../../context/ToastContext';
 import Card from '../../components/ui/Card';
 import Spinner from '../../components/ui/Spinner';
+import Pagination from '../../components/ui/Pagination';
 
 export default function PanelAdminPage() {
+  const { showSuccess, showError } = useToast();
   const [statistik, setStatistik] = useState(null);
   const [pengguna, setPengguna] = useState([]);
+  const [totalPenggunaTersaring, setTotalPenggunaTersaring] = useState(0);
   const [pencarian, setPencarian] = useState('');
   const [memuat, setMemuat] = useState(true);
-   const [penggunaDihapus, setPenggunaDihapus] = useState(null);
+  const [memuatTabel, setMemuatTabel] = useState(false);
+  const [halaman, setHalaman] = useState(1);
+  const [totalHalaman, setTotalHalaman] = useState(1);
+  const [penggunaDihapus, setPenggunaDihapus] = useState(null);
   const [menghapus, setMenghapus] = useState(false);
 
   useEffect(() => {
-    Promise.all([api.get('/admin/statistik'), api.get('/admin/pengguna')])
-      .then(([resStat, resPengguna]) => {
-        setStatistik(resStat.data);
-        setPengguna(resPengguna.data);
-      })
-      .finally(() => setMemuat(false));
+    api.get('/admin/statistik').then((res) => setStatistik(res.data));
   }, []);
 
-  const penggunaTersaring = pengguna.filter(
-    (p) =>
-      p.nama_pengguna?.toLowerCase().includes(pencarian.toLowerCase()) ||
-      p.email?.toLowerCase().includes(pencarian.toLowerCase())
-  );
-   async function hapusPengguna() {
+  useEffect(() => {
+    setMemuatTabel(true);
+    // debounce dikit biar nggak nembak request tiap ketikan
+    const timer = setTimeout(() => {
+      api
+        .get(`/admin/pengguna?page=${halaman}&limit=10&cari=${encodeURIComponent(pencarian)}`)
+        .then((res) => {
+          setPengguna(res.data);
+          setTotalPenggunaTersaring(res.total || 0);
+          setTotalHalaman(res.total_halaman || 1);
+        })
+        .finally(() => {
+          setMemuatTabel(false);
+          setMemuat(false);
+        });
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [halaman, pencarian]);
+
+  function ubahPencarian(v) {
+    setPencarian(v);
+    setHalaman(1);
+  }
+
+  async function hapusPengguna() {
     if (!penggunaDihapus) return;
     setMenghapus(true);
     try {
       await api.delete(`/admin/pengguna/${penggunaDihapus.id}`);
-      setPengguna((prev) => prev.filter((p) => p.id !== penggunaDihapus.id));
       setPenggunaDihapus(null);
+      // muat ulang halaman sekarang biar daftar & total ke-update
+      const res = await api.get(`/admin/pengguna?page=${halaman}&limit=10&cari=${encodeURIComponent(pencarian)}`);
+      setPengguna(res.data);
+      setTotalPenggunaTersaring(res.total || 0);
+      setTotalHalaman(res.total_halaman || 1);
+      showSuccess('Pengguna berhasil dihapus.');
     } catch (err) {
-      alert(err.message || 'Gagal menghapus pengguna.');
+      showError(err.message || 'Gagal menghapus pengguna.');
     } finally {
       setMenghapus(false);
     }
@@ -97,7 +123,7 @@ export default function PanelAdminPage() {
         <div className="flex items-center justify-between p-5 pb-4">
           <div>
             <h3 className="font-semibold text-gray-900">Daftar Pengguna</h3>
-            <p className="text-xs text-gray-400">{penggunaTersaring.length} dari {pengguna.length} pengguna</p>
+            <p className="text-xs text-gray-400">{totalPenggunaTersaring} pengguna{pencarian ? ` untuk "${pencarian}"` : ''}</p>
           </div>
           <div className="relative">
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -105,7 +131,7 @@ export default function PanelAdminPage() {
               className="h-9 rounded-lg border border-gray-300 pl-8 pr-3 text-sm w-56 focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="Cari nama / email..."
               value={pencarian}
-              onChange={(e) => setPencarian(e.target.value)}
+              onChange={(e) => ubahPencarian(e.target.value)}
             />
           </div>
         </div>
@@ -120,7 +146,7 @@ export default function PanelAdminPage() {
             </tr>
           </thead>
           <tbody>
-             {penggunaTersaring.map((p) => (
+             {pengguna.map((p) => (
               <tr key={p.id} className="border-b border-gray-50 hover:bg-gray-50">
                 <td className="px-5 py-3 font-medium text-gray-900">{p.nama_lengkap || p.nama_pengguna}</td>
                 <td className="px-5 py-3 text-gray-500">{p.email}</td>
@@ -149,6 +175,12 @@ export default function PanelAdminPage() {
             ))}
           </tbody>
         </table>
+        {!memuatTabel && pengguna.length === 0 && (
+          <p className="text-sm text-gray-400 text-center py-10">Tidak ada pengguna yang cocok.</p>
+        )}
+        <div className="px-5 pb-5">
+          <Pagination halaman={halaman} totalHalaman={totalHalaman} onChange={setHalaman} />
+        </div>
       </Card>
        {penggunaDihapus && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
