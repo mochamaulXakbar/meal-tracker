@@ -134,4 +134,36 @@ const hitungKalkulasi = async (req, res) => {
     }
   });
 };
-module.exports = { ambilProfil, lengkapiProfil, hitungKalkulasi };
+// Fungsi: Upload/ganti foto profil — terima 1 file (field "foto"), simpan ke Supabase Storage
+const uploadFotoProfil = async (req, res) => {
+  const id = req.userId;
+
+  if (!req.file) {
+    return res.status(400).json({ status: 'error', pesan: 'File foto wajib dikirim (field "foto")' });
+  }
+
+  const ekstensi = req.file.originalname.split('.').pop();
+  const namaFile = `${id}-${Date.now()}.${ekstensi}`;
+
+  const { error: uploadError } = await supabase.storage
+    .from('foto-profil')
+    .upload(namaFile, req.file.buffer, { contentType: req.file.mimetype });
+
+  if (uploadError) {
+    return res.status(500).json({ status: 'error', pesan: uploadError.message });
+  }
+
+  const { data: publicData } = supabase.storage.from('foto-profil').getPublicUrl(namaFile);
+
+  const { data, error } = await supabase
+    .from('pengguna')
+    .update({ foto_profil: publicData.publicUrl })
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) return res.status(400).json({ status: 'error', pesan: error.message });
+  res.json({ status: 'success', pesan: 'Foto profil berhasil diperbarui', data });
+};
+
+module.exports = { ambilProfil, lengkapiProfil, hitungKalkulasi, uploadFotoProfil };

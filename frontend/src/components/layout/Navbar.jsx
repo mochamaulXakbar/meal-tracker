@@ -93,9 +93,13 @@ export default function Navbar() {
           <div className="relative">
             <button
               onClick={() => setDropdownTerbuka((v) => !v)}
-              className="w-9 h-9 rounded-full bg-primary text-white flex items-center justify-center font-medium text-sm"
+              className="w-9 h-9 rounded-full bg-primary text-white flex items-center justify-center font-medium text-sm overflow-hidden"
             >
-              {inisial}
+              {user?.foto_profil ? (
+                <img src={user.foto_profil} alt="Foto profil" className="w-full h-full object-cover" />
+              ) : (
+                inisial
+              )}
             </button>
             {dropdownTerbuka && (
               <>
